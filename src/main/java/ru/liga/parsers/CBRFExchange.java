@@ -5,7 +5,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import ru.liga.helpers.IdCurrencyForCBR;
+import ru.liga.model.Currency;
+import ru.liga.model.IdCurrencyForCBR;
 import ru.liga.model.Case;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,20 +20,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnlineCBRExchange implements Parser{
+public class CBRFExchange implements Parser{
 
     public static List<Case> getData(String[] request)  {
         List<Case> caseList = new ArrayList<>();
-        String cur = IdCurrencyForCBR.valueOf(request[1]).getCurrency();
+        Currency currency = Currency.getCurrencyHashMap().get(request[1]);
 
         try {
-            URLConnection conn = getUrlConnection(cur);
+            URLConnection conn = getUrlConnection(currency.getId());
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(conn.getInputStream());
 
             NodeList curElements = doc.getDocumentElement().getElementsByTagName("Record");
-            getCases(request[1], caseList, curElements);
+            getCases(currency.getName(), caseList, curElements);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
@@ -45,6 +46,8 @@ public class OnlineCBRExchange implements Parser{
             NamedNodeMap attributes = node.getAttributes();
             Case c = new Case();
             DateTimeFormatter dateTimeFormatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            //почему-то данные из цбрф с вторника по субботу
+            //видимо окончательная цена записывается на следующий день
             c.setDate(LocalDate.parse(attributes.getNamedItem("Date").getNodeValue(),dateTimeFormatter1));
             c.setCurrency(currency);
             NodeList nodeList = node.getChildNodes();
@@ -56,19 +59,22 @@ public class OnlineCBRExchange implements Parser{
 //        System.out.println("-------------------------------");
     }
 
-    private static URLConnection getUrlConnection(String cur) throws IOException {
+    private static URLConnection getUrlConnection(String id) throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate weekAgo = LocalDate.now().minusDays(90);
+        LocalDate dayInThePast = LocalDate.now().minusDays(90);
         LocalDate now = LocalDate.now();
 
         String u = String.format("http://www.cbr.ru/scripts/XML_dynamic.asp" +
                 "?date_req1=%s&date_req2=%s&VAL_NM_RQ=%s",
-                weekAgo.format(dateTimeFormatter),now.format(dateTimeFormatter), cur);
-//        System.out.println(u);
+                dayInThePast.format(dateTimeFormatter),now.format(dateTimeFormatter), id);
         URL url = new URL(u);
         URLConnection conn = url.openConnection();
         return conn;
     }
+
+
+
+
 
 
 }

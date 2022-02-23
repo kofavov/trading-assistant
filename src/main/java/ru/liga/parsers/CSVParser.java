@@ -20,7 +20,6 @@ public class CSVParser implements Parser{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Read CSV line by line and use the string array as you want
         for (String[] row : allRows) {
             allData.add(new Case(row));
         }

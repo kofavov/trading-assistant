@@ -1,4 +1,4 @@
-package ru.liga.helpers;
+package ru.liga.model;
 
 public enum IdCurrencyForCBR {
     //индекс дает понять CBR по какой валюте нужны данные

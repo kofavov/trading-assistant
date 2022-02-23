@@ -60,6 +60,6 @@ public class Case {
     public String toString() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MM-yyyy");
         String dateToString = date.format(dateTimeFormatter);
-        return dateToString + " " + String.format("%.4f", value) + " " + currency;
+        return dateToString + " " + String.format("%.2f", value) + " " + currency;
     }
 }

@@ -1,5 +1,7 @@
 package ru.liga.helpers;
 
+import ru.liga.model.Currency;
+
 import java.util.Scanner;
 
 public class RequestHelper {
@@ -16,7 +18,7 @@ public class RequestHelper {
     }
 
     public static boolean checkRequest(String[] request) {
-        boolean currency = request[1].contains("USD") || request[1].contains("TRY") || request[1].contains("EUR");
+        boolean currency = Currency.getCurrencyHashMap().containsKey(request[1]);
         boolean period = request[2].contains("week") || request[2].contains("tomorrow");
         return currency && period;
     }

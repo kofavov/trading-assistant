@@ -20,8 +20,10 @@ import java.util.List;
 public class LineRegression implements Algo {
     @Override
     public List<Case> getPrediction(List<Case> data, String[] request) {
+        //создаю новый лист чтобы не вносить изменения в предыдущий
+        List<Case> newData = new ArrayList<>(data);
         LocalDate today = LocalDate.now();
-        LocalDate lastDayInList = data.get(0).getDate();//последний известный день
+        LocalDate lastDayInList = newData.get(0).getDate();//последний известный день
         int countDaysForPredict = DateHelper.getCountDays(request);
 
         //добавляю количество дней до сегодня + количество дней для прогноза
@@ -33,26 +35,26 @@ public class LineRegression implements Algo {
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
 
-        while (!data.get(0).getDate().equals(stopDay)) {
-            double newValue = process(data);
-            setFuturePoint(data, newValue);
+        while (!newData.get(0).getDate().equals(stopDay)) {
+            double newValue = process(newData);
+            Algo.setFuturePoint(newData, newValue);
         }
-        data = data.subList(0, countDaysForPredict);
-        Collections.reverse(data);
-        return data;
+        newData = newData.subList(0, countDaysForPredict);
+        Collections.reverse(newData);
+        return newData;
     }
 
 
-    public double process(List<Case> data) {
+    public double process(List<Case> newData) {
         Attribute p = new Attribute("price");
         Attribute d = new Attribute("date");
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(d);
         attributes.add(p);
-        data = data.subList(0, 30);
-        Instances prises = new Instances("prices", attributes, data.size());
+        newData = newData.subList(0, 30);
+        Instances prises = new Instances("prices", attributes, newData.size());
         prises.setClassIndex(prises.numAttributes() - 1);
-        getNewInstance(data, p, d, prises);
+        getNewInstance(newData, p, d, prises);
         double value = 0;
         try {
             Instances testingDataSet = new Instances(prises);
@@ -62,7 +64,7 @@ public class LineRegression implements Algo {
             eval.evaluateModel(classifier, testingDataSet);
 //            System.out.println("** Linear Regression Evaluation with Datasets **");
 //            System.out.println(eval.toSummaryString());
-//            System.out.print(" the expression for the input data as per alogorithm is ");
+//            System.out.print(" the expression for the input newData as per alogorithm is ");
 //            System.out.println(classifier);
             Instances instances = new Instances(prises);
             Instance predicationDataSet = instances.lastInstance();
@@ -73,12 +75,12 @@ public class LineRegression implements Algo {
         return Precision.round(value, 4);
     }
 
-    private void getNewInstance(List<Case> data, Attribute p, Attribute d, Instances prises) {
-        for (int j = data.size() - 1; j >= 0; j--) {
+    private void getNewInstance(List<Case> newData, Attribute p, Attribute d, Instances prises) {
+        for (int j = newData.size() - 1; j >= 0; j--) {
             Instance instance = new DenseInstance(2);
-            long days = ChronoUnit.DAYS.between(data.get(j).getDate(), LocalDate.now());
+            long days = ChronoUnit.DAYS.between(newData.get(j).getDate(), LocalDate.now());
             instance.setValue(d, days);
-            instance.setValue(p, data.get(j).getValue());
+            instance.setValue(p, newData.get(j).getValue());
             prises.add(instance);
         }
     }

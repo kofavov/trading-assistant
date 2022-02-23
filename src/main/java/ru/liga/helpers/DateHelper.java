@@ -13,8 +13,8 @@ public class DateHelper {
     public static int checkDayOfWeek(Case c) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE");
         String curDate = c.getDate().format(dateTimeFormatter);
-        if (curDate.contains("пт")) return 3;
-        else if (curDate.contains("сб")) return 2;
+        if (curDate.contains("сб")) return 3;
+        else if (curDate.contains("вс")) return 2;
         return 1;
     }
     //сколько дней добавить
