@@ -1,8 +1,7 @@
 package ru.liga;
 
 import ru.liga.algoritms.Algo;
-import ru.liga.algoritms.AverageSevenDays;
-import ru.liga.algoritms.LineRegression;
+import ru.liga.algoritms.AverageForTheWeekAlgo;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
 import ru.liga.parsers.CBRFExchange;
@@ -19,7 +18,7 @@ public class Main {
         List<Case> data = CBRFExchange.getData(requestParam);
 //        List<Case> data = CSVParser.getData(requestParam);
         //делаем прогноз
-        Algo algo = new AverageSevenDays();
+        Algo algo = new AverageForTheWeekAlgo();
 //        Algo algo = new LineRegression();
         List<Case> prediction = algo.getPrediction(data, requestParam);
         //выводим результат

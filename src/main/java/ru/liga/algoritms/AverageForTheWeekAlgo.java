@@ -8,12 +8,20 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-public class AverageSevenDays implements Algo {
+/**
+Класс позволяет получить среднее значение курса на базе предыдущих значений за неделю
+ Если данные устарели, то прогноз делается и на отсутствующие числа
+ @param data List с полученными данными из какого-либо источника
+ @param request Массив с данными на основе введенного запроса пользователем
+    где request[1] - название запрашиваемой валюты,
+    а request[2] - необходимый таймфрейм
+*/
+public class AverageForTheWeekAlgo extends Algo {
     @Override
     public List<Case> getPrediction(List<Case> data, String[] request) {
         //создаю новый лист чтобы не вносить изменения в предыдущий
         List<Case> newData = new ArrayList<>(data);
+
         LocalDate today = LocalDate.now();
         LocalDate lastDayInList = newData.get(0).getDate();//последний известный день
         int countDaysForPredict = DateHelper.getCountDays(request);
@@ -37,7 +45,7 @@ public class AverageSevenDays implements Algo {
         while (!newData.get(0).getDate().equals(stopDay)) {
             //получаю среднее значение за 7 дней, если добавляется новый день, то он включается в список для вычисления
             double avg = newData.subList(0, 7).stream().mapToDouble(Case::getValue).average().getAsDouble();
-            Algo.setFuturePoint(newData,avg);
+            addNewCase(newData,avg);
         }
     }
 }

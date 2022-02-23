@@ -48,7 +48,9 @@ public class Case {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Case onePoint = (Case) o;
-        return Double.compare(onePoint.value, value) == 0 && Objects.equals(date, onePoint.date) && Objects.equals(currency, onePoint.currency);
+        return Double.compare(onePoint.value, value) == 0
+                && Objects.equals(date, onePoint.date)
+                && Objects.equals(currency, onePoint.currency);
     }
 
     @Override

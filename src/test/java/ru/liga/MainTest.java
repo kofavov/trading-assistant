@@ -3,7 +3,7 @@ package ru.liga;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.liga.algoritms.Algo;
-import ru.liga.algoritms.AverageSevenDays;
+import ru.liga.algoritms.AverageForTheWeekAlgo;
 import ru.liga.model.Case;
 import ru.liga.parsers.CSVParser;
 
@@ -18,7 +18,7 @@ public class MainTest {
     @Test
     public void weekAvgTest() throws IOException {
         String[] request = new String[]{"rate", "USD", "week"};
-        Algo algo = new AverageSevenDays();
+        Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);
         Assert.assertEquals(7, futurePoint.size());
@@ -27,7 +27,7 @@ public class MainTest {
     @Test
     public void tomorrowAvgTest() {
         String[] request = new String[]{"rate", "USD", "tomorrow"};
-        Algo algo = new AverageSevenDays();
+        Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);
         Assert.assertEquals(1, futurePoint.size());
@@ -36,7 +36,7 @@ public class MainTest {
     @Test
     public void checkOrderWeekAvg() {
         String[] request = new String[]{"rate", "USD", "week"};
-        Algo algo = new AverageSevenDays();
+        Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);
         boolean check = false;

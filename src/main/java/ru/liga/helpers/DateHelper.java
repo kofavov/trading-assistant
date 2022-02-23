@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class DateHelper {
-    //так как по выходным биржа не работает надо пропустить вс и сб
-    //в идеале и праздники
+    /**
+     * так как по выходным биржа не работает надо пропустить вс и сб(в данном случае вс и пн)
+     *     в идеале и праздники
+     */
     public static int checkDayOfWeek(Case c) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE");
         String curDate = c.getDate().format(dateTimeFormatter);
@@ -17,7 +19,7 @@ public class DateHelper {
         else if (curDate.contains("вс")) return 2;
         return 1;
     }
-    //сколько дней добавить
+//    сколько дней добавить
     public static int getCountDays(String[] request) {
         if (request[2].equals("tomorrow")) {
             return 1;

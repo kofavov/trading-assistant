@@ -6,18 +6,18 @@ import ru.liga.model.Case;
 
 import java.util.List;
 
-public interface Algo {
-    List<Case> getPrediction(List<Case> data, String[] request);
+public abstract class Algo {
+    public abstract List<Case> getPrediction(List<Case> data, String[] request);
 
-    static void setFuturePoint(List<Case> data, double newValue) {
-        Case currentPoint = data.get(0);
-        Case futurePoint = new Case();
-        //заменить на +1 если не нужно пропускать сб и вс
-        futurePoint.setDate(currentPoint.getDate().plusDays(DateHelper.checkDayOfWeek(currentPoint)));
-        futurePoint.setCurrency(currentPoint.getCurrency());
-        //количество знаков после запятой
-        futurePoint.setValue(Precision.round(newValue, 2));
-        data.add(0, futurePoint);
-        data.remove(data.size() - 1);
+    protected void addNewCase(List<Case> newData, double newValue) {
+        Case currentCase = newData.get(0);
+        Case newCase = new Case();
+        //заменить DataHelper на +1 если не нужно пропускать сб и вс
+        newCase.setDate(currentCase.getDate().plusDays(DateHelper.checkDayOfWeek(currentCase)));
+        newCase.setCurrency(currentCase.getCurrency());
+        //округление до n знаков после запятой
+        newCase.setValue(Precision.round(newValue, 2));
+        newData.add(0, newCase);
+        newData.remove(newData.size() - 1);
     }
 }

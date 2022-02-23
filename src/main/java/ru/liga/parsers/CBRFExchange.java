@@ -23,7 +23,7 @@ import java.util.List;
 public class CBRFExchange implements Parser{
 
     public static List<Case> getData(String[] request)  {
-        List<Case> caseList = new ArrayList<>();
+        List<Case> data = new ArrayList<>();
         Currency currency = Currency.getCurrencyHashMap().get(request[1]);
 
         try {
@@ -33,27 +33,27 @@ public class CBRFExchange implements Parser{
             Document doc = builder.parse(conn.getInputStream());
 
             NodeList curElements = doc.getDocumentElement().getElementsByTagName("Record");
-            getCases(currency.getName(), caseList, curElements);
+            getCases(currency.getName(), data, curElements);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
-        return caseList;
+        return data;
     }
 
     private static void getCases(String currency, List<Case> caseList, NodeList curElements) {
         for (int i = 0; i < curElements.getLength(); i++) {
             Node node = curElements.item(i);
             NamedNodeMap attributes = node.getAttributes();
-            Case c = new Case();
+            Case newCase = new Case();
             DateTimeFormatter dateTimeFormatter1 = DateTimeFormatter.ofPattern("dd.MM.yyyy");
             //почему-то данные из цбрф с вторника по субботу
             //видимо окончательная цена записывается на следующий день
-            c.setDate(LocalDate.parse(attributes.getNamedItem("Date").getNodeValue(),dateTimeFormatter1));
-            c.setCurrency(currency);
+            newCase.setDate(LocalDate.parse(attributes.getNamedItem("Date").getNodeValue(),dateTimeFormatter1));
+            newCase.setCurrency(currency);
             NodeList nodeList = node.getChildNodes();
             Node node1 = nodeList.item(1);
-            c.setValue(Double.parseDouble(node1.getFirstChild().getNodeValue().replaceAll(",",".")));
-            caseList.add(0,c);
+            newCase.setValue(Double.parseDouble(node1.getFirstChild().getNodeValue().replaceAll(",",".")));
+            caseList.add(0,newCase);
         }
 //        caseList.forEach(System.out::println);
 //        System.out.println("-------------------------------");
@@ -64,12 +64,11 @@ public class CBRFExchange implements Parser{
         LocalDate dayInThePast = LocalDate.now().minusDays(90);
         LocalDate now = LocalDate.now();
 
-        String u = String.format("http://www.cbr.ru/scripts/XML_dynamic.asp" +
+        String urlString = String.format("http://www.cbr.ru/scripts/XML_dynamic.asp" +
                 "?date_req1=%s&date_req2=%s&VAL_NM_RQ=%s",
                 dayInThePast.format(dateTimeFormatter),now.format(dateTimeFormatter), id);
-        URL url = new URL(u);
-        URLConnection conn = url.openConnection();
-        return conn;
+        URL url = new URL(urlString);
+        return url.openConnection();
     }
 
 

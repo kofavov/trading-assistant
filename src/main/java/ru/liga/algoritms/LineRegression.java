@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LineRegression implements Algo {
+public class LineRegression extends Algo {
     @Override
     public List<Case> getPrediction(List<Case> data, String[] request) {
         //создаю новый лист чтобы не вносить изменения в предыдущий
@@ -34,10 +34,10 @@ public class LineRegression implements Algo {
 
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
-
+        //добавляем новые значения пока не достигнем целевого дня
         while (!newData.get(0).getDate().equals(stopDay)) {
             double newValue = process(newData);
-            Algo.setFuturePoint(newData, newValue);
+            addNewCase(newData, newValue);
         }
         newData = newData.subList(0, countDaysForPredict);
         Collections.reverse(newData);
@@ -45,7 +45,7 @@ public class LineRegression implements Algo {
     }
 
 
-    public double process(List<Case> newData) {
+    private double process(List<Case> newData) {
         Attribute p = new Attribute("price");
         Attribute d = new Attribute("date");
         ArrayList<Attribute> attributes = new ArrayList<>();

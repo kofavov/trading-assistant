@@ -13,14 +13,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class Currency {
     private static final HashMap<String, Currency> CURRENCY_HASH_MAP = new HashMap<>();
     private String id;
     private String name;
-    private String engname;
+    private String engName;
     private Integer nominal;
     private String parentCode;
     private Integer ISO_Num_Code;
@@ -30,10 +29,11 @@ public class Currency {
         fillMap();
     }
 
-    public Currency(String id, String name, String engname, Integer nominal, String parentCode, Integer ISO_Num_Code, String ISO_Char_Code) {
+    public Currency(String id, String name, String engName, Integer nominal,
+                    String parentCode, Integer ISO_Num_Code, String ISO_Char_Code) {
         this.id = id;
         this.name = name;
-        this.engname = engname;
+        this.engName = engName;
         this.nominal = nominal;
         this.parentCode = parentCode;
         this.ISO_Num_Code = ISO_Num_Code;
@@ -55,24 +55,26 @@ public class Currency {
                 NodeList nodeList = node.getChildNodes();
                 //несколько валют имеют не полные данные их надо пропустить
                 if (id.equals("R01720A") || id.equals("R01436")) continue;
-                String name = nodeList.item(0).getFirstChild().getNodeValue();
-                String engname = nodeList.item(1).getFirstChild().getNodeValue();
-                Integer nominal = Integer.parseInt(nodeList.item(2).getFirstChild().getNodeValue());
-                String parentCode = nodeList.item(3).getFirstChild().getNodeValue();
-                Integer ISO_Num_Code = Integer.valueOf(nodeList.item(4).getFirstChild().getNodeValue());
-                String ISO_Char_Code = nodeList.item(5).getFirstChild().getNodeValue();
-                Currency currency = new Currency(id, name, engname, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
-                CURRENCY_HASH_MAP.put(ISO_Char_Code, currency);
+                Currency currency = getNewCurrency(nodeList,id);
+                CURRENCY_HASH_MAP.put(currency.ISO_Char_Code, currency);
             }
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
     }
+    private static Currency getNewCurrency(NodeList nodeList,String id){
+        String name = nodeList.item(0).getFirstChild().getNodeValue();
+        String engName = nodeList.item(1).getFirstChild().getNodeValue();
+        Integer nominal = Integer.parseInt(nodeList.item(2).getFirstChild().getNodeValue());
+        String parentCode = nodeList.item(3).getFirstChild().getNodeValue();
+        Integer ISO_Num_Code = Integer.valueOf(nodeList.item(4).getFirstChild().getNodeValue());
+        String ISO_Char_Code = nodeList.item(5).getFirstChild().getNodeValue();
+        return new Currency(id, name, engName, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
+    }
 
     public static URLConnection getURLConnectionAllCurrencies() throws IOException {
         URL url = new URL("http://www.cbr.ru/scripts/XML_valFull.asp");
-        URLConnection conn = url.openConnection();
-        return conn;
+        return url.openConnection();
     }
 
     public String getId() {
@@ -91,12 +93,12 @@ public class Currency {
         this.name = name;
     }
 
-    public String getEngname() {
-        return engname;
+    public String getEngName() {
+        return engName;
     }
 
-    public void setEngname(String engname) {
-        this.engname = engname;
+    public void setEngName(String engName) {
+        this.engName = engName;
     }
 
     public int getNominal() {
@@ -136,12 +138,18 @@ public class Currency {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Currency currency = (Currency) o;
-        return nominal == currency.nominal && ISO_Num_Code == currency.ISO_Num_Code && Objects.equals(id, currency.id) && Objects.equals(name, currency.name) && Objects.equals(engname, currency.engname) && Objects.equals(parentCode, currency.parentCode) && Objects.equals(ISO_Char_Code, currency.ISO_Char_Code);
+        return Objects.equals(nominal, currency.nominal)
+                && Objects.equals(ISO_Num_Code, currency.ISO_Num_Code)
+                && Objects.equals(id, currency.id)
+                && Objects.equals(name, currency.name)
+                && Objects.equals(engName, currency.engName)
+                && Objects.equals(parentCode, currency.parentCode)
+                && Objects.equals(ISO_Char_Code, currency.ISO_Char_Code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, engname, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
+        return Objects.hash(id, name, engName, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
     }
 
     @Override
@@ -149,7 +157,7 @@ public class Currency {
         return "Currency{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", engname='" + engname + '\'' +
+                ", engname='" + engName + '\'' +
                 ", nominal=" + nominal +
                 ", parentCode='" + parentCode + '\'' +
                 ", ISO_Num_Code=" + ISO_Num_Code +
