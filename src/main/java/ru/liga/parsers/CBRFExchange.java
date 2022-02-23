@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 import ru.liga.model.Currency;
 import ru.liga.model.IdCurrencyForCBR;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,9 +23,9 @@ import java.util.List;
 
 public class CBRFExchange implements Parser{
 
-    public static List<Case> getData(String[] request)  {
+    public static List<Case> getData(Request request)  {
         List<Case> data = new ArrayList<>();
-        Currency currency = Currency.getCurrencyHashMap().get(request[1]);
+        Currency currency = Currency.getCurrencyHashMap().get(request.getISO_Char_Code());
 
         try {
             URLConnection conn = getUrlConnection(currency.getId());

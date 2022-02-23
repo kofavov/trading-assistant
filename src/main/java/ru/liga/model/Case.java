@@ -1,5 +1,7 @@
 package ru.liga.model;
 
+import org.apache.commons.math3.util.Precision;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -8,6 +10,8 @@ public class Case {
     private LocalDate date;
     private double value;
     private String currency;
+    //количество знаков после запятой
+    private static final int SCALE = 2;
 
     public Case() {
     }
@@ -60,8 +64,9 @@ public class Case {
 
     @Override
     public String toString() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd-MM-yyyy");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd.MM.yyyy");
         String dateToString = date.format(dateTimeFormatter);
-        return dateToString + " " + String.format("%.2f", value) + " " + currency;
+        value = Precision.round(value, SCALE);
+        return dateToString + " - " + String.format("%."+SCALE+"f", value) + " " + currency;
     }
 }

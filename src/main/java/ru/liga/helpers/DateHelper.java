@@ -2,6 +2,7 @@ package ru.liga.helpers;
 
 import org.apache.commons.math3.util.Precision;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -20,10 +21,10 @@ public class DateHelper {
         return 1;
     }
 //    сколько дней добавить
-    public static int getCountDays(String[] request) {
-        if (request[2].equals("tomorrow")) {
+    public static int getCountDays(Request request) {
+        if (request.getTimeFrame().equals("tomorrow")) {
             return 1;
-        } else if (request[2].equals("week")) {
+        } else if (request.getTimeFrame().equals("week")) {
             return 7;
         }
         return 0;

@@ -3,6 +3,7 @@ package ru.liga.algoritms;
 import org.apache.commons.math3.util.Precision;
 import ru.liga.helpers.DateHelper;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.functions.LinearRegression;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class LineRegression extends Algo {
     @Override
-    public List<Case> getPrediction(List<Case> data, String[] request) {
+    public List<Case> getPrediction(List<Case> data, Request request) {
         //создаю новый лист чтобы не вносить изменения в предыдущий
         List<Case> newData = new ArrayList<>(data);
         LocalDate today = LocalDate.now();

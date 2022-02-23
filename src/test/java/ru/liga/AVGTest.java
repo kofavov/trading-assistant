@@ -4,20 +4,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.liga.algoritms.Algo;
 import ru.liga.algoritms.AverageForTheWeekAlgo;
+import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 import ru.liga.parsers.CSVParser;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-public class MainTest {
-    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-    private StringBuilder stringBuilder;
+public class AVGTest {
+
 
     @Test
     public void weekAvgTest() throws IOException {
-        String[] request = new String[]{"rate", "USD", "week"};
+        Request request = new Request("rate", "USD", "week");
         Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);
@@ -26,7 +27,7 @@ public class MainTest {
 
     @Test
     public void tomorrowAvgTest() {
-        String[] request = new String[]{"rate", "USD", "tomorrow"};
+        Request request = new Request("rate", "USD", "tomorrow");
         Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);
@@ -35,7 +36,7 @@ public class MainTest {
 
     @Test
     public void checkOrderWeekAvg() {
-        String[] request = new String[]{"rate", "USD", "week"};
+        Request request = new Request("rate", "USD", "week");
         Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
         List<Case> futurePoint = algo.getPrediction(data, request);

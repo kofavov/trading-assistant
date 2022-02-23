@@ -5,6 +5,15 @@ public class Request {
     private String ISO_Char_Code;
     private String timeFrame;
 
+    public Request(String [] request) {
+        if (request.length!=3){
+            throw new IllegalArgumentException("Введите верный запрос");
+        }
+        this.rate = request[0];
+        this.ISO_Char_Code = request[1];
+        this.timeFrame = request[2];
+    }
+
     public Request(String rate, String ISO_Char_Code, String timeFrame) {
         this.rate = rate;
         this.ISO_Char_Code = ISO_Char_Code;

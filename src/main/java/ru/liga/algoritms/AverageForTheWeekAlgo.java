@@ -2,6 +2,7 @@ package ru.liga.algoritms;
 
 import ru.liga.helpers.DateHelper;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -10,15 +11,15 @@ import java.util.Collections;
 import java.util.List;
 /**
 Класс позволяет получить среднее значение курса на базе предыдущих значений за неделю
- Если данные устарели, то прогноз делается и на отсутствующие числа
- @param data List с полученными данными из какого-либо источника
- @param request Массив с данными на основе введенного запроса пользователем
-    где request[1] - название запрашиваемой валюты,
-    а request[2] - необходимый таймфрейм
+ Если данные устарели, то прогноз выполняется и на отсутствующие числа
 */
 public class AverageForTheWeekAlgo extends Algo {
+    /**
+     *  @param data List с полученными данными из какого-либо источника
+     *  @param request запрос пользователя
+    */
     @Override
-    public List<Case> getPrediction(List<Case> data, String[] request) {
+    public List<Case> getPrediction(List<Case> data, Request request) {
         //создаю новый лист чтобы не вносить изменения в предыдущий
         List<Case> newData = new ArrayList<>(data);
 
