@@ -23,12 +23,12 @@ public class AverageForTheWeekAlgo extends Algo {
         //создаю новый лист чтобы не вносить изменения в предыдущий
         List<Case> newData = new ArrayList<>(data);
 
-        LocalDate today = LocalDate.now();
-        LocalDate lastDayInList = newData.get(0).getDate();//последний известный день
+        //последний известный день
+        LocalDate lastDayInList = newData.get(0).getDate();
         int countDaysForPredict = DateHelper.getCountDays(request);
 
         //добавляю количество дней до сегодня + количество дней для прогноза
-        int plusDays = countDaysForPredict + (int) ChronoUnit.DAYS.between(lastDayInList, today);
+        int plusDays = countDaysForPredict + (int) ChronoUnit.DAYS.between(lastDayInList, LocalDate.now());
         LocalDate stopDay = lastDayInList.plusDays(plusDays);
         //если только от последнего известного дня
 //        LocalDate stopDay = lastDayInList.plusDays(countDaysForPredict);
@@ -43,7 +43,7 @@ public class AverageForTheWeekAlgo extends Algo {
     }
 
     private void getNewData(List<Case> newData, LocalDate stopDay) {
-        while (!newData.get(0).getDate().equals(stopDay)) {
+        while (newData.get(0).getDate().isBefore(stopDay.plusDays(1))) {
             //получаю среднее значение за 7 дней, если добавляется новый день, то он включается в список для вычисления
             double avg = newData.subList(0, 7).stream().mapToDouble(Case::getValue).average().getAsDouble();
             addNewCase(newData,avg);

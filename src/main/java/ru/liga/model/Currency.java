@@ -4,11 +4,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -26,7 +24,19 @@ public class Currency {
     private String ISO_Char_Code;
 
     static {
-        fillMap();
+        try {
+            fillMap();
+        } catch (Exception e) {
+            CURRENCY_HASH_MAP.put("USD", new Currency(CurrencyEnum.USD));
+            CURRENCY_HASH_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
+            CURRENCY_HASH_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
+        }
+    }
+
+    public Currency(CurrencyEnum currencyEnum) {
+        this.id = currencyEnum.id;
+        this.name = currencyEnum.name;
+        this.ISO_Char_Code = currencyEnum.ISO_Char_Code;
     }
 
     public Currency(String id, String name, String engName, Integer nominal,
@@ -40,8 +50,8 @@ public class Currency {
         this.ISO_Char_Code = ISO_Char_Code;
     }
 
-    private static void fillMap() {
-        try {
+    private static void fillMap() throws Exception {
+
             URLConnection connection = getURLConnectionAllCurrencies();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -57,9 +67,7 @@ public class Currency {
                 if (id.equals("R01720A") || id.equals("R01436")) continue;
                 Currency currency = getNewCurrency(nodeList,id);
                 CURRENCY_HASH_MAP.put(currency.ISO_Char_Code, currency);
-            }
-        } catch (IOException | ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
+
         }
     }
     private static Currency getNewCurrency(NodeList nodeList,String id){

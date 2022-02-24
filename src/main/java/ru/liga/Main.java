@@ -2,7 +2,6 @@ package ru.liga;
 
 import ru.liga.algoritms.Algo;
 import ru.liga.algoritms.AverageForTheWeekAlgo;
-import ru.liga.algoritms.LineRegression;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
@@ -18,8 +17,14 @@ public class Main {
         //получаем запрос
         Request request = RequestHelper.getRequest();
         //получаем данные по валюте
-        List<Case> data = CBRFExchange.getData(request);
-//        List<Case> data = CSVParser.getData(request);
+        List<Case> data;
+        try {
+            data = CBRFExchange.getData(request);
+        } catch (Exception e) {
+            System.out.println("Данные с сервера ЦБРФ недоступны\n" +
+                    "Используются локальные данные");
+            data = CSVParser.getData(request);
+        }
         //делаем прогноз
         Algo algo = new AverageForTheWeekAlgo();
 //        Algo algo = new LineRegression();
