@@ -6,6 +6,9 @@ public class Request {
     private String timeFrame;//tomorrow, week
     private boolean exit = false;
 
+    private String algoritm;
+
+
     public Request(String [] splitInputString) {
         if (splitInputString.length!=3){
             throw new IllegalArgumentException("Введите верный запрос");
@@ -23,6 +26,17 @@ public class Request {
 
     public Request(boolean exit) {
         this.exit = exit;
+    }
+
+    public String getAlgoritm() {
+        return algoritm;
+    }
+
+    public void setAlgoritm(String algoritm) throws Exception {
+        if (!algoritm.equals("avg")&&!algoritm.equals("lr")){
+            throw new Exception("Введите алгоритм из списка");
+        }
+        this.algoritm = algoritm;
     }
 
     public String getRate() {

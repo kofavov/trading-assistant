@@ -1,5 +1,6 @@
 package ru.liga.helpers;
 
+import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
 import ru.liga.model.Currency;
 import ru.liga.model.Request;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class RequestHelper {
+    private static final Scanner scanner = new Scanner(System.in);
     /**
      * Метод считывает ввод пользователя и на его основе обращается к другим методам
      * Если ввели exit программа завершается
@@ -17,9 +19,7 @@ public class RequestHelper {
     public static Request getRequestForPrediction() {
         Request request = null;
         String[] param;
-
-        helpText();
-        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите запрос");
         String inputString = scanner.nextLine();
 
         if (inputString.equals("currency")) {
@@ -35,13 +35,24 @@ public class RequestHelper {
         }
         return request;
     }
+    public static Request getAlgoRequest(Request request){
+        System.out.println("Выберите алгоритм");
+        System.out.println("avg или lr");
+        try {
+            request.setAlgoritm(scanner.nextLine());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            request = getAlgoRequest(request);
+        }
+        return request;
+    }
 
-    private static void helpText() {
-        System.out.println("Введите запрос");
-        System.out.println("Пример: rate USD week");
+    public static void helpText() {
+        System.out.println("trading-assistant");
+        System.out.println("Пример запроса: rate USD week");
         System.out.println("Если хотите увидеть список возможных валют,введите currency");
         System.out.println("Если историю history и ISO валюты");
-        System.out.println("Пример: history USD");
+        System.out.println("Пример запроса: history USD");
         System.out.println("Доступные тайм фреймы tomorrow, week");
         System.out.println("Для выхода введите exit");
     }

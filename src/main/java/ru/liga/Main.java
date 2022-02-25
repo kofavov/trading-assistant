@@ -21,6 +21,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        RequestHelper.helpText();
         Request request;
         do {
             //получаем запрос
@@ -36,11 +37,13 @@ public class Main {
                 continue;
             }
             //делаем прогноз
-//            Algo algo = new AverageForTheWeekAlgo();
-            Algo algo = new LineRegression();
-            List<Case> prediction = algo.getPrediction(data, request);
-            //выводим результат
-            prediction.forEach(System.out::println);
+            Algo algo = Algo.getAlgo(request);
+            List<Case> prediction = null;
+            if (algo != null) {
+                prediction = algo.getPrediction(data, request);
+                //выводим результат
+                prediction.forEach(System.out::println);
+            }
         } while ((!request.isExit()));
     }
 }
