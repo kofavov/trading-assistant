@@ -1,7 +1,7 @@
 package ru.liga;
 
 import ru.liga.algoritms.Algo;
-import ru.liga.algoritms.AverageForTheWeekAlgo;
+import ru.liga.algoritms.LineRegression;
 import ru.liga.helpers.DataHelper;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
@@ -36,8 +36,8 @@ public class Main {
                 continue;
             }
             //делаем прогноз
-            Algo algo = new AverageForTheWeekAlgo();
-//        Algo algo = new LineRegression();
+//            Algo algo = new AverageForTheWeekAlgo();
+            Algo algo = new LineRegression();
             List<Case> prediction = algo.getPrediction(data, request);
             //выводим результат
             prediction.forEach(System.out::println);
