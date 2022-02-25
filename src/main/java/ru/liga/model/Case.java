@@ -67,6 +67,6 @@ public class Case {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd.MM.yyyy");
         String dateToString = date.format(dateTimeFormatter);
         value = Precision.round(value, SCALE);
-        return dateToString + " - " + String.format("%."+SCALE+"f", value) + " " + currency;
+        return dateToString + " - " + String.format("%."+SCALE+"f", value);
     }
 }

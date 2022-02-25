@@ -25,6 +25,7 @@ public class CBRFExchange implements Parser {
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
 
         URLConnection conn = getUrlConnection(currency.getId());
+        conn.setConnectTimeout(3000);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(conn.getInputStream());
@@ -56,7 +57,7 @@ public class CBRFExchange implements Parser {
 
     private static URLConnection getUrlConnection(String id) throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        //
+        //получаем данные за 3 месяца
         LocalDate dayInThePast = LocalDate.now().minusDays(90);
         //возможно есть данные о завтрашнем курсе тогда их можно использовать
         LocalDate now = LocalDate.now().plusDays(1);

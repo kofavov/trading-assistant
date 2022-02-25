@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -54,8 +53,8 @@ public class Currency {
     }
 
     private static void fillMap() throws Exception {
-
         URLConnection connection = getURLConnectionAllCurrencies();
+        connection.setConnectTimeout(3000);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(connection.getInputStream());
@@ -70,7 +69,6 @@ public class Currency {
             if (id.equals("R01720A") || id.equals("R01436")) continue;
             Currency currency = getNewCurrency(nodeList, id);
             CURRENCY_MAP.put(currency.ISO_Char_Code, currency);
-
         }
     }
 
@@ -87,6 +85,15 @@ public class Currency {
     public static URLConnection getURLConnectionAllCurrencies() throws IOException {
         URL url = new URL("http://www.cbr.ru/scripts/XML_valFull.asp");
         return url.openConnection();
+    }
+
+    public static Map<String, Currency> getCurrencyMap() {
+        return CURRENCY_MAP;
+    }
+
+    @Override
+    public String toString() {
+        return ISO_Char_Code + " " + name + " nominal = " + nominal ;
     }
 
     public String getId() {
@@ -162,14 +169,5 @@ public class Currency {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, engName, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
-    }
-
-    @Override
-    public String toString() {
-        return ISO_Char_Code + " " + name + " nominal = " + nominal ;
-    }
-
-    public static Map<String, Currency> getCurrencyMap() {
-        return CURRENCY_MAP;
     }
 }
