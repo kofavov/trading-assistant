@@ -10,8 +10,7 @@ import java.util.Scanner;
 
 public class DateHelper {
     /**
-     * так как по выходным биржа не работает надо пропустить вс и сб(в данном случае вс и пн)
-     *     в идеале и праздники
+     * Так как по выходным биржа не работает вс и сб пропускаются(в данном случае вс и пн)
      */
     public static int checkDayOfWeek(Case c) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE");

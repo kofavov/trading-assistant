@@ -17,7 +17,7 @@ public class RequestTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
         try {
-            RequestHelper.getRequest();
+            RequestHelper.getRequestForPrediction();
         }catch (NoSuchElementException ignored){
         }
         Assert.assertTrue(output.toString().contains("Введите верный запрос"));
@@ -29,7 +29,7 @@ public class RequestTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
         try {
-            RequestHelper.getRequest();
+            RequestHelper.getRequestForPrediction();
         } catch (NoSuchElementException ignored) {
         }
         Assert.assertTrue(output.toString().contains("Введите верный запрос"));
@@ -41,7 +41,7 @@ public class RequestTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
         try {
-            RequestHelper.getRequest();
+            RequestHelper.getRequestForPrediction();
         } catch (NoSuchElementException ignored) {
         }
         Assert.assertTrue(output.toString().contains("Введите верный запрос"));
@@ -53,7 +53,7 @@ public class RequestTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
         try {
-            RequestHelper.getRequest();
+            RequestHelper.getRequestForPrediction();
         } catch (NoSuchElementException ignored) {
         }
         Assert.assertFalse(output.toString().contains("Введите верный запрос"));

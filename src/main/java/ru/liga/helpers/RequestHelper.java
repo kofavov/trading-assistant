@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class RequestHelper {
-    public static Request getRequest() {
+    /**
+     * Метод считывает ввод пользователя и на его основе обращается к другим методам
+     * Если ввели exit программа завершается
+     * @return Request - запрос пользователя
+     */
+    public static Request getRequestForPrediction() {
         Request request = null;
         String[] param;
 
@@ -19,14 +24,14 @@ public class RequestHelper {
 
         if (inputString.equals("currency")) {
             Currency.getCurrencyMap().values().forEach(System.out::println);
-            request = getRequest();
+            request = getRequestForPrediction();
         } else if (inputString.contains("history")) {
             getHistory(inputString);
-            request = getRequest();
+            request = getRequestForPrediction();
         } else if (inputString.equals("exit")) {
             System.exit(0);
         } else {
-            request = getRequest(inputString);
+            request = getRequestForPrediction(inputString);
         }
         return request;
     }
@@ -41,7 +46,12 @@ public class RequestHelper {
         System.out.println("Для выхода введите exit");
     }
 
-    private static Request getRequest(String inputString) {
+    /**
+     * создает объект типа Request
+     * @param inputString строка введенная пользователем
+     * @return запрос
+     */
+    private static Request getRequestForPrediction(String inputString) {
         String[] param;
         Request request;
         try {
@@ -52,13 +62,17 @@ public class RequestHelper {
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            request = getRequest();
+            request = getRequestForPrediction();
         }
         return request;
     }
 
-    private static void getHistory(String s) {
-        String[] ISO = {"rate", s.split(" ")[1], "tomorrow"};
+    /**
+     * метод выводит исторические данные в консоль
+     * @param inputString введенная строка
+     */
+    private static void getHistory(String inputString) {
+        String[] ISO = {"", inputString.split(" ")[1], ""};
         Request historyRequest = new Request(ISO);
         List<Case> data = null;
         try {
@@ -69,7 +83,16 @@ public class RequestHelper {
         }
     }
 
-    public static boolean checkRequest(Request request) {
+    /**
+     * Проверка запроса
+     * Если введеный ISO код есть в базе доступных валют, то return true
+     * Иначе выводится сообщение о том, что такая валюта недоступна или же
+     * тайм фрейм введен неправильно
+     * @param request запрос
+     * @return результат проверки
+     */
+
+    private static boolean checkRequest(Request request) {
         boolean currency = Currency.getCurrencyMap().containsKey(request.getISO_Char_Code());
         boolean period = request.getTimeFrame().matches("week|tomorrow|month");
         if (!currency) {

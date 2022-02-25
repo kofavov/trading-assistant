@@ -6,6 +6,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * Объекты данного класса хранят в себе информацию о курсе на какую-то определенную дату
+ */
 public class Case {
     private LocalDate date;
     private double value;
@@ -21,6 +24,14 @@ public class Case {
         this.date = LocalDate.parse(row[0],dateTimeFormatter);
         this.value = Double.parseDouble(row[1].replaceAll(",","."));
         this.currency = row[2];
+    }
+
+    @Override
+    public String toString() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd.MM.yyyy");
+        String dateToString = date.format(dateTimeFormatter);
+        double roundValue = Precision.round(value, SCALE);
+        return dateToString + " - " + String.format("%."+SCALE+"f", roundValue);
     }
 
     public LocalDate getDate() {
@@ -60,13 +71,5 @@ public class Case {
     @Override
     public int hashCode() {
         return Objects.hash(date, currency, value);
-    }
-
-    @Override
-    public String toString() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEE dd.MM.yyyy");
-        String dateToString = date.format(dateTimeFormatter);
-        value = Precision.round(value, SCALE);
-        return dateToString + " - " + String.format("%."+SCALE+"f", value);
     }
 }

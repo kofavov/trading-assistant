@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+
 public class CBRFExchange implements Parser {
 
     public static List<Case> getData(Request request) throws Exception {

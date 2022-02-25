@@ -2,16 +2,16 @@ package ru.liga.model;
 
 public class Request {
     private String rate;
-    private String ISO_Char_Code;
-    private String timeFrame;
+    private String ISO_Char_Code;//USD, EUR, TRY и т.д.
+    private String timeFrame;//tomorrow, week
 
-    public Request(String [] request) {
-        if (request.length!=3){
+    public Request(String [] splitInputString) {
+        if (splitInputString.length!=3){
             throw new IllegalArgumentException("Введите верный запрос");
         }
-        this.rate = request[0];
-        this.ISO_Char_Code = request[1];
-        this.timeFrame = request[2];
+        this.rate = splitInputString[0];
+        this.ISO_Char_Code = splitInputString[1];
+        this.timeFrame = splitInputString[2];
     }
 
     public Request(String rate, String ISO_Char_Code, String timeFrame) {

@@ -9,6 +9,15 @@ import java.io.IOException;
 import java.util.List;
 
 public class DataHelper {
+    /**
+     * Получение исторических данных
+     * Если не получается взять данные из ЦБ,
+     * то они берутся из csv файла
+     * Если и его нет, то выводится сообщение о том что файла не существует
+     * @param request запрос пользователя
+     * @return List с историческими данными
+     * @throws IOException если файла не существует
+     */
     public static List<Case> getData(Request request) throws IOException {
         List<Case> data;
         try {
