@@ -42,7 +42,7 @@ public class RequestHelper {
         System.out.println("Если хотите увидеть список возможных валют,введите currency");
         System.out.println("Если историю history и ISO валюты");
         System.out.println("Пример: history USD");
-        System.out.println("Доступные тайм фреймы tomorrow, week, month");
+        System.out.println("Доступные тайм фреймы tomorrow, week");
         System.out.println("Для выхода введите exit");
     }
 
@@ -94,7 +94,7 @@ public class RequestHelper {
 
     private static boolean checkRequest(Request request) {
         boolean currency = Currency.getCurrencyMap().containsKey(request.getISO_Char_Code());
-        boolean period = request.getTimeFrame().matches("week|tomorrow|month");
+        boolean period = request.getTimeFrame().matches("week|tomorrow");//|month
         if (!currency) {
             System.out.println("невозможно получить информацию по этой валюте");
         }

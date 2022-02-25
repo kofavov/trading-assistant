@@ -83,7 +83,7 @@ public class Currency {
         return new Currency(id, name, engName, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
     }
 
-    public static URLConnection getURLConnectionAllCurrencies() throws IOException {
+    private static URLConnection getURLConnectionAllCurrencies() throws IOException {
         URL url = new URL("http://www.cbr.ru/scripts/XML_valFull.asp");
         return url.openConnection();
     }

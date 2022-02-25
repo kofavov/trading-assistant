@@ -35,6 +35,7 @@ public class LineRegression extends Algo {
 
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
+//        if (countDaysForPredict == 30) stopDay = stopDay.plusDays(8);
         //добавляем новые значения пока не достигнем целевого дня
         while (newData.get(0).getDate().isBefore(stopDay.plusDays(1))) {
             double newValue = process(newData);
