@@ -2,6 +2,8 @@ package ru.liga;
 
 import ru.liga.algoritms.Algo;
 import ru.liga.algoritms.AverageForTheWeekAlgo;
+import ru.liga.algoritms.LineRegression;
+import ru.liga.helpers.DataHelper;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
@@ -13,17 +15,16 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-
         //получаем запрос
         Request request = RequestHelper.getRequest();
         //получаем данные по валюте
         List<Case> data;
         try {
-            data = CBRFExchange.getData(request);
-        } catch (Exception e) {
-            System.out.println("Данные с сервера ЦБРФ недоступны\n" +
-                    "Используются локальные данные");
-            data = CSVParser.getData(request);
+            data = DataHelper.getData(request);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            main(new String[0]);
+            return;
         }
         //делаем прогноз
         Algo algo = new AverageForTheWeekAlgo();

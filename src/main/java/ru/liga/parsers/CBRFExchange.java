@@ -22,7 +22,7 @@ public class CBRFExchange implements Parser {
 
     public static List<Case> getData(Request request) throws Exception {
         List<Case> data = new ArrayList<>();
-        Currency currency = Currency.getCurrencyHashMap().get(request.getISO_Char_Code());
+        Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
 
         URLConnection conn = getUrlConnection(currency.getId());
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -56,6 +56,7 @@ public class CBRFExchange implements Parser {
 
     private static URLConnection getUrlConnection(String id) throws IOException {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        //
         LocalDate dayInThePast = LocalDate.now().minusDays(90);
         //возможно есть данные о завтрашнем курсе тогда их можно использовать
         LocalDate now = LocalDate.now().plusDays(1);

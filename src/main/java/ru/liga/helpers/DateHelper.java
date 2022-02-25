@@ -26,6 +26,8 @@ public class DateHelper {
             return 1;
         } else if (request.getTimeFrame().equals("week")) {
             return 7;
+        } else if (request.getTimeFrame().equals("month")){
+            return 30;
         }
         return 0;
     }
