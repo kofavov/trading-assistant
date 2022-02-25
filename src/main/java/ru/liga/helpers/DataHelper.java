@@ -16,7 +16,7 @@ public class DataHelper {
      * Если и его нет, то выводится сообщение о том что файла не существует
      * @param request запрос пользователя
      * @return List с историческими данными
-     * @throws IOException если файла не существует
+     * @throws IOException если файла не существует или данные отсутствуют
      */
     public static List<Case> getData(Request request) throws IOException {
         List<Case> data;
@@ -27,6 +27,7 @@ public class DataHelper {
                     "Используются локальные данные");
             data = CSVParser.getData(request);
         }
+        if (data.isEmpty())throw new IOException("нет данных");
         return data;
     }
 }

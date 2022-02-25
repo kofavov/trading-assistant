@@ -19,12 +19,13 @@ public class Main {
      * eсли нужно выводить все дни подряд, то там же закомментировать 19-20 строчки
      */
 
-    private static boolean exit = false;
 
     public static void main(String[] args) {
-        while (!exit) {
+        Request request;
+        do {
             //получаем запрос
-            Request request = RequestHelper.getRequestForPrediction();
+            request = RequestHelper.getRequestForPrediction();
+            if (request.isExit()) break;
             //получаем данные по валюте
             List<Case> data;
             try {
@@ -40,6 +41,6 @@ public class Main {
             List<Case> prediction = algo.getPrediction(data, request);
             //выводим результат
             prediction.forEach(System.out::println);
-        }
+        } while ((!request.isExit()));
     }
 }

@@ -29,7 +29,7 @@ public class RequestHelper {
             getHistory(inputString);
             request = getRequestForPrediction();
         } else if (inputString.equals("exit")) {
-            System.exit(0);
+            request = new Request(true);
         } else {
             request = getRequestForPrediction(inputString);
         }

@@ -4,6 +4,7 @@ public class Request {
     private String rate;
     private String ISO_Char_Code;//USD, EUR, TRY и т.д.
     private String timeFrame;//tomorrow, week
+    private boolean exit = false;
 
     public Request(String [] splitInputString) {
         if (splitInputString.length!=3){
@@ -18,6 +19,10 @@ public class Request {
         this.rate = rate;
         this.ISO_Char_Code = ISO_Char_Code;
         this.timeFrame = timeFrame;
+    }
+
+    public Request(boolean exit) {
+        this.exit = exit;
     }
 
     public String getRate() {
@@ -42,5 +47,13 @@ public class Request {
 
     public void setTimeFrame(String timeFrame) {
         this.timeFrame = timeFrame;
+    }
+
+    public boolean isExit() {
+        return exit;
+    }
+
+    public void setExit(boolean exit) {
+        this.exit = exit;
     }
 }

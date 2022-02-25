@@ -28,6 +28,7 @@ public class Currency {
         try {
             fillMap();
         } catch (Exception e) {
+            System.out.println("Данные из ЦБ недоступны Будут использоваться локальные");
             CURRENCY_MAP.put("USD", new Currency(CurrencyEnum.USD));
             CURRENCY_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
             CURRENCY_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
