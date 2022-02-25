@@ -11,10 +11,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class Currency {
-    private static final HashMap<String, Currency> CURRENCY_HASH_MAP = new HashMap<>();
+    private static final Map<String, Currency> CURRENCY_MAP = new TreeMap<>();
     private String id;
     private String name;
     private String engName;
@@ -27,9 +29,9 @@ public class Currency {
         try {
             fillMap();
         } catch (Exception e) {
-            CURRENCY_HASH_MAP.put("USD", new Currency(CurrencyEnum.USD));
-            CURRENCY_HASH_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
-            CURRENCY_HASH_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
+            CURRENCY_MAP.put("USD", new Currency(CurrencyEnum.USD));
+            CURRENCY_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
+            CURRENCY_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
         }
     }
 
@@ -37,6 +39,7 @@ public class Currency {
         this.id = currencyEnum.id;
         this.name = currencyEnum.name;
         this.ISO_Char_Code = currencyEnum.ISO_Char_Code;
+        this.nominal = currencyEnum.nominal;
     }
 
     public Currency(String id, String name, String engName, Integer nominal,
@@ -52,25 +55,26 @@ public class Currency {
 
     private static void fillMap() throws Exception {
 
-            URLConnection connection = getURLConnectionAllCurrencies();
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(connection.getInputStream());
+        URLConnection connection = getURLConnectionAllCurrencies();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.parse(connection.getInputStream());
 
-            NodeList curElements = doc.getDocumentElement().getElementsByTagName("Item");
-            for (int i = 0; i < curElements.getLength(); i++) {
-                Node node = curElements.item(i);
-                NamedNodeMap attributes = node.getAttributes();
-                String id = attributes.getNamedItem("ID").getNodeValue();
-                NodeList nodeList = node.getChildNodes();
-                //несколько валют имеют не полные данные их надо пропустить
-                if (id.equals("R01720A") || id.equals("R01436")) continue;
-                Currency currency = getNewCurrency(nodeList,id);
-                CURRENCY_HASH_MAP.put(currency.ISO_Char_Code, currency);
+        NodeList curElements = doc.getDocumentElement().getElementsByTagName("Item");
+        for (int i = 0; i < curElements.getLength(); i++) {
+            Node node = curElements.item(i);
+            NamedNodeMap attributes = node.getAttributes();
+            String id = attributes.getNamedItem("ID").getNodeValue();
+            NodeList nodeList = node.getChildNodes();
+            //несколько валют имеют не полные данные их надо пропустить
+            if (id.equals("R01720A") || id.equals("R01436")) continue;
+            Currency currency = getNewCurrency(nodeList, id);
+            CURRENCY_MAP.put(currency.ISO_Char_Code, currency);
 
         }
     }
-    private static Currency getNewCurrency(NodeList nodeList,String id){
+
+    private static Currency getNewCurrency(NodeList nodeList, String id) {
         String name = nodeList.item(0).getFirstChild().getNodeValue();
         String engName = nodeList.item(1).getFirstChild().getNodeValue();
         Integer nominal = Integer.parseInt(nodeList.item(2).getFirstChild().getNodeValue());
@@ -162,18 +166,10 @@ public class Currency {
 
     @Override
     public String toString() {
-        return "Currency{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", engname='" + engName + '\'' +
-                ", nominal=" + nominal +
-                ", parentCode='" + parentCode + '\'' +
-                ", ISO_Num_Code=" + ISO_Num_Code +
-                ", ISO_Char_Code='" + ISO_Char_Code + '\'' +
-                '}';
+        return ISO_Char_Code + " " + name + " nominal = " + nominal ;
     }
 
-    public static HashMap<String, Currency> getCurrencyHashMap() {
-        return CURRENCY_HASH_MAP;
+    public static Map<String, Currency> getCurrencyMap() {
+        return CURRENCY_MAP;
     }
 }

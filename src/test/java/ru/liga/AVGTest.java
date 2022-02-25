@@ -26,7 +26,7 @@ public class AVGTest {
     }
 
     @Test
-    public void tomorrowAvgTest() {
+    public void tomorrowAvgTest() throws IOException {
         Request request = new Request("rate", "USD", "tomorrow");
         Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);
@@ -35,7 +35,7 @@ public class AVGTest {
     }
 
     @Test
-    public void checkOrderWeekAvg() {
+    public void checkOrderWeekAvg() throws IOException {
         Request request = new Request("rate", "USD", "week");
         Algo algo = new AverageForTheWeekAlgo();
         List<Case> data = CSVParser.getData(request);

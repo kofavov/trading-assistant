@@ -24,7 +24,7 @@ public class RequestTest {
     }
     @Test
     public void checkBadRequest2() {
-        ByteArrayInputStream in = new ByteArrayInputStream("rate USD year".getBytes());
+        ByteArrayInputStream in = new ByteArrayInputStream("rate USD noSuchPeriod".getBytes());
         System.setIn(in);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));
