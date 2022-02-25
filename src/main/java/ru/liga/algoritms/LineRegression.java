@@ -50,7 +50,7 @@ public class LineRegression extends Algo {
     
     private double process(List <Case> newData){
         SimpleRegression simpleRegression = new SimpleRegression(true);
-        //берем последние 7 значений
+        //берем последние n значений (в данном случае 7)
         double [][] dataArray = new double[7][2];
         for (int i = 0; i < dataArray.length; i++) {
             dataArray[i][0] = i;
@@ -58,6 +58,7 @@ public class LineRegression extends Algo {
 //            System.out.println(i + " " + newData.get(i).getValue());
         }
         simpleRegression.addData(dataArray);
+        //Выбор коэффициента(фактора?) по умолчанию 1.5
         return simpleRegression.predict(1.5);
     }
     

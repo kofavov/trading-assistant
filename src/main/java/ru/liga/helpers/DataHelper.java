@@ -23,6 +23,7 @@ public class DataHelper {
         try {
             data = CBRFExchange.getData(request);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
                     "Используются локальные данные");
             data = CSVParser.getData(request);

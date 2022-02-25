@@ -29,6 +29,7 @@ public class Currency {
             fillMap();
         } catch (Exception e) {
             System.out.println("Данные из ЦБ недоступны Будут использоваться локальные");
+            System.out.println(e.getMessage());
             CURRENCY_MAP.put("USD", new Currency(CurrencyEnum.USD));
             CURRENCY_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
             CURRENCY_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
@@ -85,7 +86,7 @@ public class Currency {
     }
 
     private static URLConnection getURLConnectionAllCurrencies() throws IOException {
-        URL url = new URL("http://www.cbr.ru/scripts/XML_valFull.asp");
+        URL url = new URL("https://www.cbr.ru/scripts/XML_valFull.asp");
         return url.openConnection();
     }
 

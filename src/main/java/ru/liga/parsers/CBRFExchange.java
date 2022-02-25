@@ -65,7 +65,7 @@ public class CBRFExchange implements Parser {
         //возможно есть данные о завтрашнем курсе тогда их можно использовать
         LocalDate now = LocalDate.now().plusDays(1);
 
-        String urlString = String.format("http://www.cbr.ru/scripts/XML_dynamic.asp" +
+        String urlString = String.format("https://www.cbr.ru/scripts/XML_dynamic.asp" +
                         "?date_req1=%s&date_req2=%s&VAL_NM_RQ=%s",
                 dayInThePast.format(dateTimeFormatter), now.format(dateTimeFormatter), id);
         URL url = new URL(urlString);
