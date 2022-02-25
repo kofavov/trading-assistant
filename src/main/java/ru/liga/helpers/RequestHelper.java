@@ -35,9 +35,10 @@ public class RequestHelper {
 
     private static void helpText() {
         System.out.println("Введите запрос");
-        System.out.println("Пример rate USD week");
+        System.out.println("Пример: rate USD week");
         System.out.println("Если хотите увидеть список возможных валют,введите currency");
         System.out.println("Если историю history и ISO валюты");
+        System.out.println("Пример: history USD");
     }
 
     private static Request getRequest(String inputString) {
