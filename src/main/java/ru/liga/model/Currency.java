@@ -54,7 +54,8 @@ public class Currency {
 
     private static void fillMap() throws Exception {
         URLConnection connection = getURLConnectionAllCurrencies();
-        connection.setConnectTimeout(3000);
+        connection.setConnectTimeout(1500);
+        connection.setReadTimeout(1500);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(connection.getInputStream());

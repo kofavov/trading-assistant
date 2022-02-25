@@ -3,9 +3,6 @@ package ru.liga.helpers;
 import ru.liga.model.Case;
 import ru.liga.model.Currency;
 import ru.liga.model.Request;
-import ru.liga.parsers.CBRFExchange;
-import ru.liga.parsers.CSVParser;
-import ru.liga.parsers.Parser;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,11 +20,12 @@ public class RequestHelper {
         if (inputString.equals("currency")) {
             Currency.getCurrencyMap().values().forEach(System.out::println);
             request = getRequest();
-        }else if (inputString.contains("history")){
+        } else if (inputString.contains("history")) {
             getHistory(inputString);
             request = getRequest();
-        }
-        else {
+        } else if (inputString.equals("exit")) {
+            System.exit(0);
+        } else {
             request = getRequest(inputString);
         }
         return request;
@@ -39,6 +37,8 @@ public class RequestHelper {
         System.out.println("Если хотите увидеть список возможных валют,введите currency");
         System.out.println("Если историю history и ISO валюты");
         System.out.println("Пример: history USD");
+        System.out.println("Доступные тайм фреймы tomorrow, week, month");
+        System.out.println("Для выхода введите exit");
     }
 
     private static Request getRequest(String inputString) {
@@ -58,7 +58,7 @@ public class RequestHelper {
     }
 
     private static void getHistory(String s) {
-        String [] ISO = {"rate", s.split(" ")[1],"tomorrow"};
+        String[] ISO = {"rate", s.split(" ")[1], "tomorrow"};
         Request historyRequest = new Request(ISO);
         List<Case> data = null;
         try {

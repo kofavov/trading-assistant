@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class CBRFExchange implements Parser {
 
@@ -25,7 +26,8 @@ public class CBRFExchange implements Parser {
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
 
         URLConnection conn = getUrlConnection(currency.getId());
-        conn.setConnectTimeout(3000);
+        conn.setConnectTimeout(1500);
+        conn.setReadTimeout(1500);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(conn.getInputStream());

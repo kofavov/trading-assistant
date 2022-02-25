@@ -15,7 +15,6 @@ import java.util.NoSuchElementException;
 
 public class AVGTest {
 
-
     @Test
     public void weekAvgTest() throws IOException {
         Request request = new Request("rate", "USD", "week");
