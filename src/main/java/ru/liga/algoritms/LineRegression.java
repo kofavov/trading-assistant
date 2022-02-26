@@ -30,10 +30,10 @@ public class LineRegression extends Algo {
         int countDaysForPredict = DateHelper.getCountDays(request);
 
         //добавляю количество дней до сегодня + количество дней для прогноза
-        LocalDate stopDay = lastDayInList.plusDays(countDaysForPredict
-                + (int) ChronoUnit.DAYS.between(lastDayInList, today));
+//        LocalDate stopDay = lastDayInList.plusDays(countDaysForPredict
+//                + (int) ChronoUnit.DAYS.between(lastDayInList, today));
 //        если только от последнего известного дня
-//        LocalDate stopDay = lastDayInList.plusDays(countDaysForPredict);
+        LocalDate stopDay = lastDayInList.plusDays(countDaysForPredict);
 
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
