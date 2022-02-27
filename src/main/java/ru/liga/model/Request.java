@@ -1,7 +1,7 @@
 package ru.liga.model;
 
 public class Request {
-    private String rate;
+    private String typeRequest;
     private String ISO_Char_Code;//USD, EUR, TRY и т.д.
     private String timeFrame;//tomorrow, week
     private boolean exit = false;
@@ -9,17 +9,17 @@ public class Request {
     private String algoritm;
 
 
-    public Request(String [] splitInputString) {
-        if (splitInputString.length!=3){
+    public Request(String[] splitInputString) {
+        if (splitInputString.length != 3) {
             throw new IllegalArgumentException("Введите верный запрос");
         }
-        this.rate = splitInputString[0];
+        this.typeRequest = splitInputString[0];
         this.ISO_Char_Code = splitInputString[1];
         this.timeFrame = splitInputString[2];
     }
 
-    public Request(String rate, String ISO_Char_Code, String timeFrame) {
-        this.rate = rate;
+    public Request(String typeRequest, String ISO_Char_Code, String timeFrame) {
+        this.typeRequest = typeRequest;
         this.ISO_Char_Code = ISO_Char_Code;
         this.timeFrame = timeFrame;
     }
@@ -33,18 +33,18 @@ public class Request {
     }
 
     public void setAlgoritm(String algoritm) throws Exception {
-        if (!algoritm.equals("avg")&&!algoritm.equals("lr")){
+        if (!algoritm.equals("avg") && !algoritm.equals("lr")) {
             throw new Exception("Введите алгоритм из списка");
         }
         this.algoritm = algoritm;
     }
 
-    public String getRate() {
-        return rate;
+    public String getTypeRequest() {
+        return typeRequest;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setTypeRequest(String typeRequest) {
+        this.typeRequest = typeRequest;
     }
 
     public String getISO_Char_Code() {
@@ -69,5 +69,10 @@ public class Request {
 
     public void setExit(boolean exit) {
         this.exit = exit;
+    }
+
+    @Override
+    public String toString() {
+        return typeRequest + " " + ISO_Char_Code + " " + timeFrame;
     }
 }

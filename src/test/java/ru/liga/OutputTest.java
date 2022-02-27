@@ -23,7 +23,7 @@ public class OutputTest {
         }
         String[] outputStrings = output.toString().split("\r\n");
         boolean checkOneString = false;
-        for (int i = 10; i < outputStrings.length-2; i++) {
+        for (int i = 11; i < outputStrings.length-2; i++) {
             boolean date = outputStrings[i].matches("[а-я]{2} \\d{2}\\.\\d{2}\\.\\d{4} - .+");
             boolean price = outputStrings[i].matches(".+ \\d{2},\\d{2}");
             checkOneString = date && price;

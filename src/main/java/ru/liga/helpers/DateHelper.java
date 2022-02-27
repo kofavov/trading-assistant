@@ -4,6 +4,8 @@ import org.apache.commons.math3.util.Precision;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
@@ -30,5 +32,9 @@ public class DateHelper {
 //            return 30;
 //        }
         return 0;
+    }
+    public static boolean newCheckDayOfWeek(LocalDate localDate){
+        return localDate.getDayOfWeek().equals(DayOfWeek.MONDAY)
+                ||localDate.getDayOfWeek().equals(DayOfWeek.SUNDAY);
     }
 }

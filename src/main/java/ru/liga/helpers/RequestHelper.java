@@ -2,7 +2,7 @@ package ru.liga.helpers;
 
 import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
-import ru.liga.model.Currency;
+import ru.liga.model.NewCurrency;
 import ru.liga.model.Request;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class RequestHelper {
         String inputString = scanner.nextLine();
 
         if (inputString.equals("currency")) {
-            Currency.getCurrencyMap().values().forEach(System.out::println);
+            NewCurrency.getCurrencyMap().values().forEach(System.out::println);
             request = getRequestForPrediction();
         } else if (inputString.contains("history")) {
             getHistory(inputString);
@@ -83,7 +83,7 @@ public class RequestHelper {
      * @param inputString введенная строка
      */
     private static void getHistory(String inputString) {
-        String[] ISO = {"", inputString.split(" ")[1], ""};
+        String[] ISO = {"history", inputString.split(" ")[1], ""};
         Request historyRequest = new Request(ISO);
         List<Case> data = null;
         try {
@@ -104,7 +104,7 @@ public class RequestHelper {
      */
 
     private static boolean checkRequest(Request request) {
-        boolean currency = Currency.getCurrencyMap().containsKey(request.getISO_Char_Code());
+        boolean currency = NewCurrency.getCurrencyMap().containsKey(request.getISO_Char_Code());
         boolean period = request.getTimeFrame().matches("week|tomorrow");//|month
         if (!currency) {
             System.out.println("невозможно получить информацию по этой валюте");

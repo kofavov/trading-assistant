@@ -2,8 +2,9 @@ package ru.liga.helpers;
 
 import ru.liga.model.Case;
 import ru.liga.model.Request;
-import ru.liga.parsers.CBRFExchange;
+import ru.liga.parsers.NewCBRFExchange;
 import ru.liga.parsers.CSVParser;
+import ru.liga.parsers.NewCBRFExchange;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +22,7 @@ public class DataHelper {
     public static List<Case> getData(Request request) throws IOException {
         List<Case> data;
         try {
-            data = CBRFExchange.getData(request);
+            data = NewCBRFExchange.getData(request);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
