@@ -1,5 +1,8 @@
 package ru.liga.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -11,9 +14,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Currency {
     private static final Map<String, Currency> CURRENCY_MAP = new TreeMap<>();
     private String id;
@@ -35,6 +40,7 @@ public class Currency {
             CURRENCY_MAP.put("TRY", new Currency(ru.liga.model.CurrencyEnum.TRY));
         }
     }
+
     public Currency(ru.liga.model.CurrencyEnum currencyEnum) {
         this.id = currencyEnum.id;
         this.name = currencyEnum.name;
@@ -69,12 +75,12 @@ public class Currency {
             NodeList nodeList = node.getChildNodes();
             //несколько валют имеют не полные данные их надо пропустить
             if (id.equals("R01720A") || id.equals("R01436")) continue;
-            Currency currency = getNewNewCurrency(nodeList, id);
+            Currency currency = getNewCurrency(nodeList, id);
             CURRENCY_MAP.put(currency.getISO_Char_Code(), currency);
         }
     }
 
-    private static Currency getNewNewCurrency(NodeList nodeList, String id) {
+    private static Currency getNewCurrency(NodeList nodeList, String id) {
         Integer ISO_Num_Code = Integer.valueOf(nodeList.item(0).getFirstChild().getNodeValue());
         String ISO_Char_Code = nodeList.item(1).getFirstChild().getNodeValue();
         Integer nominal = Integer.parseInt(nodeList.item(2).getFirstChild().getNodeValue());
@@ -95,81 +101,7 @@ public class Currency {
 
     @Override
     public String toString() {
-        return ISO_Char_Code + " " + name + " nominal = " + nominal ;
+        return ISO_Char_Code + " " + name + " nominal = " + nominal;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEngName() {
-        return engName;
-    }
-
-    public void setEngName(String engName) {
-        this.engName = engName;
-    }
-
-    public int getNominal() {
-        return nominal;
-    }
-
-    public void setNominal(int nominal) {
-        this.nominal = nominal;
-    }
-
-    public String getParentCode() {
-        return parentCode;
-    }
-
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
-
-    public int getISO_Num_Code() {
-        return ISO_Num_Code;
-    }
-
-    public void setISO_Num_Code(int ISO_Num_Code) {
-        this.ISO_Num_Code = ISO_Num_Code;
-    }
-
-    public String getISO_Char_Code() {
-        return ISO_Char_Code;
-    }
-
-    public void setISO_Char_Code(String ISO_Char_Code) {
-        this.ISO_Char_Code = ISO_Char_Code;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Currency currency = (Currency) o;
-        return Objects.equals(nominal, currency.nominal)
-                && Objects.equals(ISO_Num_Code, currency.ISO_Num_Code)
-                && Objects.equals(id, currency.id)
-                && Objects.equals(name, currency.name)
-                && Objects.equals(engName, currency.engName)
-                && Objects.equals(parentCode, currency.parentCode)
-                && Objects.equals(ISO_Char_Code, currency.ISO_Char_Code);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, engName, nominal, parentCode, ISO_Num_Code, ISO_Char_Code);
-    }
 }
