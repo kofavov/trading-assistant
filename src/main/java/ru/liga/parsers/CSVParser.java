@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CSVParser implements Parser {
+public class CSVParser implements ru.liga.parsers.Parser {
     @SuppressWarnings("resource")
-    public static List<Case> getData(Request request) throws IOException {
+    public List<Case> getData(Request request) throws IOException {
         List<String[]> allRows = null;
         List<Case> data = new ArrayList<>();
 

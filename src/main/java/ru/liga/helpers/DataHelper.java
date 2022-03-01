@@ -2,9 +2,9 @@ package ru.liga.helpers;
 
 import ru.liga.model.Case;
 import ru.liga.model.Request;
-import ru.liga.parsers.NewCBRFExchange;
+import ru.liga.parsers.CBRFExchange;
 import ru.liga.parsers.CSVParser;
-import ru.liga.parsers.NewCBRFExchange;
+import ru.liga.parsers.Parser;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,15 +19,17 @@ public class DataHelper {
      * @return List с историческими данными
      * @throws IOException если файла не существует или данные отсутствуют
      */
-    public static List<Case> getData(Request request) throws IOException {
+    public static List<Case> getData(Request request) throws Exception {
         List<Case> data;
         try {
-            data = NewCBRFExchange.getData(request);
+            Parser parser = new CBRFExchange();
+            data = parser.getData(request);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
                     "Используются локальные данные");
-            data = CSVParser.getData(request);
+            Parser parser = new CSVParser();
+            data = parser.getData(request);
         }
         if (data.isEmpty())throw new IOException("нет данных");
         return data;

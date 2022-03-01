@@ -1,7 +1,6 @@
 package ru.liga;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import ru.liga.helpers.RequestHelper;
 
@@ -10,7 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.NoSuchElementException;
-//по отдельности тесты проходятся вместе нет
+//чтобы запустить все тесты сразу, нужен в RequestHelper отдельный сканер на метод
 public class RequestTest {
 
     @Test

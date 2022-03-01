@@ -2,7 +2,6 @@ package ru.liga;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.liga.helpers.RequestHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,9 +10,10 @@ import java.util.NoSuchElementException;
 
 public class OutputTest {
     //работает только если подключение нормальное
+    //нужен общий сканер в RequestHelper
     @Test
     public void checkUSDOutputWithConnectCBRF() {
-        ByteArrayInputStream in = new ByteArrayInputStream("rate USD week\navg\nexit".getBytes());
+        ByteArrayInputStream in = new ByteArrayInputStream("rate USD week\r\navg\r\nexit".getBytes());
         System.setIn(in);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output));

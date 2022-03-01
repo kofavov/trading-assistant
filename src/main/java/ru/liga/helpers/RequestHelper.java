@@ -1,29 +1,29 @@
 package ru.liga.helpers;
 
-import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
-import ru.liga.model.NewCurrency;
+import ru.liga.model.Currency;
 import ru.liga.model.Request;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 public class RequestHelper {
-    private static final Scanner scanner = new Scanner(System.in);
+//    private static final Scanner scanner = new Scanner(System.in);
+
     /**
      * Метод считывает ввод пользователя и на его основе обращается к другим методам
      * Если ввели exit программа завершается
      * @return Request - запрос пользователя
      */
     public static Request getRequestForPrediction() {
+        Scanner scanner = new Scanner(System.in);
         Request request = null;
         String[] param;
         System.out.println("Введите запрос");
         String inputString = scanner.nextLine();
 
         if (inputString.equals("currency")) {
-            NewCurrency.getCurrencyMap().values().forEach(System.out::println);
+            Currency.getCurrencyMap().values().forEach(System.out::println);
             request = getRequestForPrediction();
         } else if (inputString.contains("history")) {
             getHistory(inputString);
@@ -36,6 +36,7 @@ public class RequestHelper {
         return request;
     }
     public static Request getAlgoRequest(Request request){
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите алгоритм");
         System.out.println("avg или lr");
         try {
@@ -89,7 +90,7 @@ public class RequestHelper {
         try {
             data = DataHelper.getData(historyRequest);
             data.forEach(System.out::println);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -104,7 +105,7 @@ public class RequestHelper {
      */
 
     private static boolean checkRequest(Request request) {
-        boolean currency = NewCurrency.getCurrencyMap().containsKey(request.getISO_Char_Code());
+        boolean currency = Currency.getCurrencyMap().containsKey(request.getISO_Char_Code());
         boolean period = request.getTimeFrame().matches("week|tomorrow");//|month
         if (!currency) {
             System.out.println("невозможно получить информацию по этой валюте");

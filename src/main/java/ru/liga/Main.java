@@ -1,7 +1,6 @@
 package ru.liga;
 
 import ru.liga.algoritms.Algo;
-import ru.liga.algoritms.LineRegression;
 import ru.liga.helpers.DataHelper;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
@@ -37,10 +36,10 @@ public class Main {
                 continue;
             }
             //делаем прогноз
-            Algo algo = Algo.getAlgo(request);
+            Algo algo = Algo.getAlgo(data,request);
             List<Case> prediction = null;
             if (algo != null) {
-                prediction = algo.getPrediction(data, request);
+                prediction = algo.getPrediction();
                 //выводим результат
                 prediction.forEach(System.out::println);
             }
