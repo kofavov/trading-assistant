@@ -1,5 +1,6 @@
 package ru.liga.helpers;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 import ru.liga.parsers.CBRFExchange;
@@ -8,7 +9,7 @@ import ru.liga.parsers.Parser;
 
 import java.io.IOException;
 import java.util.List;
-
+@Slf4j
 public class DataHelper {
     /**
      * Получение исторических данных
@@ -24,12 +25,14 @@ public class DataHelper {
         try {
             Parser parser = new CBRFExchange();
             data = parser.getData(request);
+            log.info("Данные по запросу {} получены из ЦБ",request.toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
                     "Используются локальные данные");
             Parser parser = new CSVParser();
             data = parser.getData(request);
+            log.info("Данные по запросу {} получены из csv файла",request.toString());
         }
         if (data.isEmpty())throw new IOException("нет данных");
         return data;

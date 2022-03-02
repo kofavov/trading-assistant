@@ -1,5 +1,6 @@
 package ru.liga.parsers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+@Slf4j
 public class CBRFExchange implements Parser {
     public List<Case> getData(Request request) throws Exception {
         List<Case> data = new ArrayList<>();
@@ -88,7 +89,7 @@ public class CBRFExchange implements Parser {
                 localDate.getYear(), month, day);
 //        System.out.println(urlString);
         URL url = new URL(urlString);
-
+        log.info("Подключение к {}",urlString);
         return url.openConnection();
     }
 

@@ -3,6 +3,7 @@ package ru.liga.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -19,6 +20,7 @@ import java.util.TreeMap;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Slf4j
 public class Currency {
     private static final Map<String, Currency> CURRENCY_MAP = new TreeMap<>();
     private String id;
@@ -92,6 +94,7 @@ public class Currency {
 
     private static URLConnection getURLConnectionAllCurrencies() throws IOException {
         URL url = new URL("http://www.cbr-xml-daily.ru/daily.xml");
+        log.info("Подключение к {}",url);
         return url.openConnection();
     }
 
