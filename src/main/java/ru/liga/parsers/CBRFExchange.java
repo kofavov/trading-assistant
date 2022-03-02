@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 @Slf4j
 public class CBRFExchange implements Parser {
     public List<Case> getData(Request request) throws Exception {
@@ -28,7 +29,16 @@ public class CBRFExchange implements Parser {
         int historyTimeFrame = 7;//сколько дней загружаем
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
         System.out.println("Выполнение запроса " + request + " к ЦБ ");
+        getDataFromCBRF(data, tomorrow, historyTimeFrame, currency);
+        Collections.reverse(data);
+        return data;
+    }
+
+    private void getDataFromCBRF(List<Case> data, LocalDate tomorrow, int historyTimeFrame, Currency currency) throws Exception {
         for (int i = 0; data.size() != historyTimeFrame; i++) {
+            if (i > 10) {
+                throw new Exception("Невозможно получить данные из ЦБ");
+            }
             //сервер допускает 5 запросов в секунду
             //sleep вначале так как выполняется запрос getCurrencyMap
             try {
@@ -41,8 +51,8 @@ public class CBRFExchange implements Parser {
                 continue;
             }
             URLConnection connection = getUrlConnection(tempDay);
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+            connection.setConnectTimeout(1500);
+            connection.setReadTimeout(1500);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc;
@@ -54,10 +64,7 @@ public class CBRFExchange implements Parser {
             }
             NodeList curElements = doc.getDocumentElement().getElementsByTagName("Valute");
             getCases(currency, data, curElements, tempDay);
-
         }
-        Collections.reverse(data);
-        return data;
     }
 
     private void getCases(Currency currency, List<Case> caseList, NodeList curElements, LocalDate date) {
@@ -89,7 +96,7 @@ public class CBRFExchange implements Parser {
                 localDate.getYear(), month, day);
 //        System.out.println(urlString);
         URL url = new URL(urlString);
-        log.info("Подключение к {}",urlString);
+        log.info("Подключение к {}", urlString);
         return url.openConnection();
     }
 
