@@ -77,8 +77,10 @@ public class CBRFExchange implements Parser {
             newCase.setDate(date);
             newCase.setCurrency(currency.getISO_Char_Code());
             NodeList nodeList = node.getChildNodes();
-            Node node1 = nodeList.item(4);
-            newCase.setValue(Double.parseDouble(node1.getFirstChild().getNodeValue().replaceAll(",", ".")));
+            Node nodeVal = nodeList.item(4);
+            newCase.setValue(Double.parseDouble(nodeVal.getFirstChild().getNodeValue().replaceAll(",", ".")));
+            Node nodeNominal = nodeList.item(2);
+            newCase.setNominal(Integer.parseInt(nodeNominal.getFirstChild().getNodeValue()));
             caseList.add(0, newCase);
             break;
         }
@@ -99,6 +101,4 @@ public class CBRFExchange implements Parser {
         log.info("Подключение к {}", urlString);
         return url.openConnection();
     }
-
-
 }

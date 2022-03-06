@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.math3.util.Precision;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -18,6 +21,7 @@ public class Case {
     private LocalDate date;
     private double value;
     private String currency;
+    private Integer nominal;
     //количество знаков после запятой
     private static final int SCALE = 2;
 
@@ -26,9 +30,11 @@ public class Case {
 
     public Case(String[] row) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        this.date = LocalDate.parse(row[0], dateTimeFormatter);
-        this.value = Double.parseDouble(row[1].replaceAll(",", "."));
-        this.currency = row[2];
+        this.nominal = Integer.parseInt(row[0]);
+        this.date = LocalDate.parse(row[1], dateTimeFormatter);
+        String val = row[2].replaceAll(",", ".").replaceAll("\"","");
+        this.value = Double.parseDouble(val);
+        this.currency = row[3];
     }
 
     @Override
