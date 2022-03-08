@@ -34,11 +34,13 @@ public final class Bot extends TelegramLongPollingBot {
                 log.info(command);
                 Request request = new Request(command);
                 RequestHelper requestHelper = new RequestHelper();
+                execute(SendMessage.builder().text(request + " выполняется")
+                        .chatId(message.getChatId().toString())
+                        .build());
                 execute(SendMessage.builder().text(requestHelper.executeRequest(request))
                         .chatId(message.getChatId().toString())
                         .build());
             }
-
         }
     }
 

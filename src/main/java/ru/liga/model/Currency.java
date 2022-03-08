@@ -101,6 +101,11 @@ public class Currency {
     public static Map<String, Currency> getCurrencyMap() {
         return CURRENCY_MAP;
     }
+    public static String getCurrencyMapToString(){
+        StringBuilder stringBuilder  = new StringBuilder();
+        getCurrencyMap().entrySet().forEach(s->stringBuilder.append(s).append("\n"));
+        return stringBuilder.toString();
+    }
 
     @Override
     public String toString() {

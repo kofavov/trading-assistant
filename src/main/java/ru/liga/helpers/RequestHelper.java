@@ -1,5 +1,7 @@
 package ru.liga.helpers;
 
+import lombok.SneakyThrows;
+import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
 import ru.liga.model.Currency;
 import ru.liga.model.Request;
@@ -9,11 +11,12 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class RequestHelper {
-    public String executeRequest(Request request){
+    public String executeRequest(Request request) throws Exception{
         switch (request.getTypeRequest()){
             case "/help":return helpText();
-            case "/currency":return Currency.getCurrencyMap().toString();
+            case "/currency":return Currency.getCurrencyMapToString();
             case "/history":return getHistory(request);
+            case "/rate":return getPrediction(request);
         }
         return "что-то не так";
     }
@@ -45,6 +48,16 @@ public class RequestHelper {
 //        }
 //        return request;
 //    }
+    @SneakyThrows
+    private String getPrediction(Request request){
+        List<Case> data = DataHelper.getData(request);
+        Algo algo = Algo.getAlgo(data,request);
+        List<Case> predictionData = algo.getPrediction();
+        StringBuilder stringBuilder = new StringBuilder();
+        predictionData.forEach(s->stringBuilder.append(s).append("\n"));
+        return stringBuilder.toString();
+    }
+
     public static Request getAlgoRequest(Request request){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите алгоритм");

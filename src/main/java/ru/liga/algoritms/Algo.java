@@ -38,7 +38,7 @@ public abstract class Algo {
     public abstract List<Case> getPrediction();
 
     public static Algo getAlgo(List<Case> data, Request request) {
-        request = RequestHelper.getAlgoRequest(request);
+
         if (request.getAlgoritm().equals("avg")) {
             return new AverageForTheWeekAlgo(data, request);
         }

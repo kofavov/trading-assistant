@@ -28,6 +28,7 @@ public class DataHelper {
             Parser parser = new CBRFExchange();
             data = parser.getData(request);
             log.info("Данные по запросу {} получены из ЦБ", request.toString());
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
@@ -37,6 +38,6 @@ public class DataHelper {
             log.info("Данные по запросу {} получены из csv файла", request.toString());
         }
         if (data.isEmpty()) throw new IOException("нет данных");
-        return data.subList(0, data.size() > 10 ? 10 : data.size() - 1);
+        return data.subList(0, Math.min(data.size(), 10));
     }
 }

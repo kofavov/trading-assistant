@@ -36,7 +36,7 @@ public class CBRFExchange implements Parser {
 
     private void getDataFromCBRF(List<Case> data, LocalDate tomorrow, int historyTimeFrame, Currency currency) throws Exception {
         for (int i = 0; data.size() != historyTimeFrame; i++) {
-            if (i > 20) {
+            if (i > 25) {
                 throw new Exception("Невозможно получить данные из ЦБ");
             }
             //сервер допускает 5 запросов в секунду

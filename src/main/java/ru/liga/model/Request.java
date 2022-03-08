@@ -8,12 +8,12 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class Request {
-    private String typeRequest;
-    private String ISO_Char_Code;//USD, EUR, TRY и т.д.
-    private String period;//tomorrow, week
+    private String typeRequest = "";
+    private String ISO_Char_Code = "";//USD, EUR, TRY и т.д.
+    private String period = "";//tomorrow, week
     private boolean exit = false;
-    private String algoritm;
-    private String output;
+    private String algoritm = "";
+    private String output = "";
 
 
     public Request(String commandString) {
@@ -51,6 +51,6 @@ public class Request {
 
     @Override
     public String toString() {
-        return typeRequest + " " + ISO_Char_Code + " " + period;
+        return typeRequest + " " + ISO_Char_Code + " " + period + " " + algoritm;
     }
 }
