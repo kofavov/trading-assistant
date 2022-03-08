@@ -4,6 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -14,6 +18,7 @@ public class Request {
     private boolean exit = false;
     private String algoritm = "";
     private String output = "";
+    private LocalDate date = LocalDate.now();
 
 
     public Request(String commandString) {
@@ -28,6 +33,9 @@ public class Request {
                 this.algoritm = simpleCommands[++i];
             } else if (simpleCommands[i].equals("-output")) {
                 this.output = simpleCommands[++i];
+            }else if (simpleCommands[i].equals("-date")){
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                this.date = LocalDate.parse(simpleCommands[++i],dateTimeFormatter);
             }
         }
     }

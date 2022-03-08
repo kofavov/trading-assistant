@@ -38,6 +38,6 @@ public class DataHelper {
             log.info("Данные по запросу {} получены из csv файла", request.toString());
         }
         if (data.isEmpty()) throw new IOException("нет данных");
-        return data.subList(0, Math.min(data.size(), 10));
+        return data;
     }
 }

@@ -26,12 +26,16 @@ public abstract class Algo {
         lastDayInList = newData.get(0).getDate();
         //вычисление последнего дня для прогноза
         countDaysForPredict = DateHelper.getCountDays(request);
+        if (!request.getDate().equals(LocalDate.now())){
+            stopDay = request.getDate();
+        }else {
         stopDay = lastDayInList.plusDays(countDaysForPredict);
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза на 7 дней
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
         //если есть завтрашние данные -1 прогнозируемый день
         if (lastDayInList.isAfter(LocalDate.now())){
            stopDay = stopDay.minusDays(1);
+        }
         }
     }
 
@@ -47,6 +51,9 @@ public abstract class Algo {
         }
         if(request.getAlgoritm().equals("lri")){
             return new LineRegressionFromInternet(data,request);
+        }
+        if (request.getAlgoritm().equals("act")){
+            return new Actual(data, request);
         }
         return null;
     }

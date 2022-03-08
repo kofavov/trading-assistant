@@ -25,11 +25,24 @@ public class DateHelper {
         } else if (request.getPeriod().equals("week")) {
             return 7;
         }
-//        else if (request.getTimeFrame().equals("month")){
-//            return 30;
-//        }
+        else if (request.getPeriod().equals("month")){
+            return 30;
+        }
+        else if (!request.getDate().equals(LocalDate.now()))
+        {
+            return request.getDate().compareTo(LocalDate.now());
+        }
         return 0;
     }
+    public static LocalDate checkDayOfWeek(LocalDate tempDay) {
+        if (tempDay.getDayOfWeek().equals(DayOfWeek.MONDAY))
+            tempDay = tempDay.minusDays(2);
+        else if (tempDay.getDayOfWeek().equals(DayOfWeek.SUNDAY)){
+            tempDay = tempDay.minusDays(1);
+        }
+        return tempDay;
+    }
+
     public static boolean newCheckDayOfWeek(LocalDate localDate){
         return localDate.getDayOfWeek().equals(DayOfWeek.MONDAY)
                 ||localDate.getDayOfWeek().equals(DayOfWeek.SUNDAY);
