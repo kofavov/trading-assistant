@@ -9,6 +9,7 @@ import ru.liga.parsers.Parser;
 
 import java.io.IOException;
 import java.util.List;
+
 @Slf4j
 public class DataHelper {
     /**
@@ -16,6 +17,7 @@ public class DataHelper {
      * Если не получается взять данные из ЦБ,
      * то они берутся из csv файла
      * Если и его нет, то выводится сообщение о том что файла не существует
+     *
      * @param request запрос пользователя
      * @return List с историческими данными
      * @throws IOException если файла не существует или данные отсутствуют
@@ -25,16 +27,16 @@ public class DataHelper {
         try {
             Parser parser = new CBRFExchange();
             data = parser.getData(request);
-            log.info("Данные по запросу {} получены из ЦБ",request.toString());
+            log.info("Данные по запросу {} получены из ЦБ", request.toString());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Данные с сервера ЦБРФ недоступны\n" +
                     "Используются локальные данные");
             Parser parser = new CSVParser();
             data = parser.getData(request);
-            log.info("Данные по запросу {} получены из csv файла",request.toString());
+            log.info("Данные по запросу {} получены из csv файла", request.toString());
         }
-        if (data.isEmpty())throw new IOException("нет данных");
-        return data;
+        if (data.isEmpty()) throw new IOException("нет данных");
+        return data.subList(0, data.size() > 10 ? 10 : data.size() - 1);
     }
 }

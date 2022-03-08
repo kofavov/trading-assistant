@@ -10,25 +10,32 @@ import lombok.Setter;
 public class Request {
     private String typeRequest;
     private String ISO_Char_Code;//USD, EUR, TRY и т.д.
-    private String timeFrame;//tomorrow, week
+    private String period;//tomorrow, week
     private boolean exit = false;
-
     private String algoritm;
+    private String output;
 
 
-    public Request(String[] splitInputString) {
-        if (splitInputString.length != 3) {
-            throw new IllegalArgumentException("Введите верный запрос");
+    public Request(String commandString) {
+        String[] simpleCommands = commandString.split(" ");
+
+        for (int i = 0; i < simpleCommands.length; i++) {
+            if (i == 0) this.typeRequest = simpleCommands[0];
+            if (i == 1) this.ISO_Char_Code = simpleCommands[1];
+            if (simpleCommands[i].equals("-period")) {
+                this.period = simpleCommands[++i];
+            } else if (simpleCommands[i].equals("-alg")) {
+                this.algoritm = simpleCommands[++i];
+            } else if (simpleCommands[i].equals("-output")) {
+                this.output = simpleCommands[++i];
+            }
         }
-        this.typeRequest = splitInputString[0];
-        this.ISO_Char_Code = splitInputString[1];
-        this.timeFrame = splitInputString[2];
     }
 
     public Request(String typeRequest, String ISO_Char_Code, String timeFrame) {
         this.typeRequest = typeRequest;
         this.ISO_Char_Code = ISO_Char_Code;
-        this.timeFrame = timeFrame;
+        this.period = timeFrame;
     }
 
     public Request(boolean exit) {
@@ -44,6 +51,6 @@ public class Request {
 
     @Override
     public String toString() {
-        return typeRequest + " " + ISO_Char_Code + " " + timeFrame;
+        return typeRequest + " " + ISO_Char_Code + " " + period;
     }
 }

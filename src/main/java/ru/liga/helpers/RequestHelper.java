@@ -5,9 +5,19 @@ import ru.liga.model.Currency;
 import ru.liga.model.Request;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class RequestHelper {
+    public String executeRequest(Request request){
+        switch (request.getTypeRequest()){
+            case "/help":return helpText();
+            case "/currency":return Currency.getCurrencyMap().toString();
+            case "/history":return getHistory(request);
+        }
+        return "что-то не так";
+    }
+
 //    private static final Scanner scanner = new Scanner(System.in);
 
     /**
@@ -15,26 +25,26 @@ public class RequestHelper {
      * Если ввели exit программа завершается
      * @return Request - запрос пользователя
      */
-    public static Request getRequestForPrediction() {
-        Scanner scanner = new Scanner(System.in);
-        Request request = null;
-        String[] param;
-        System.out.println("Введите запрос");
-        String inputString = scanner.nextLine();
-
-        if (inputString.equals("currency")) {
-            Currency.getCurrencyMap().values().forEach(System.out::println);
-            request = getRequestForPrediction();
-        } else if (inputString.contains("history")) {
-            getHistory(inputString);
-            request = getRequestForPrediction();
-        } else if (inputString.equals("exit")) {
-            request = new Request(true);
-        } else {
-            request = getRequestForPrediction(inputString);
-        }
-        return request;
-    }
+//    public static Request getRequestForPrediction() {
+//        Scanner scanner = new Scanner(System.in);
+//        Request request = null;
+//        String[] param;
+//        System.out.println("Введите запрос");
+//        String inputString = scanner.nextLine();
+//
+//        if (inputString.equals("currency")) {
+//            Currency.getCurrencyMap().values().forEach(System.out::println);
+//            request = getRequestForPrediction();
+//        } else if (inputString.contains("history")) {
+//            getHistory(inputString);
+//            request = getRequestForPrediction();
+//        } else if (inputString.equals("exit")) {
+//            request = new Request(true);
+//        } else {
+//            request = getRequestForPrediction(inputString);
+//        }
+//        return request;
+//    }
     public static Request getAlgoRequest(Request request){
         Scanner scanner = new Scanner(System.in);
         System.out.println("Выберите алгоритм");
@@ -48,53 +58,48 @@ public class RequestHelper {
         return request;
     }
 
-    public static void helpText() {
-        System.out.println("trading-assistant");
-        System.out.println("Пример запроса: rate USD week");
-        System.out.println("Если хотите увидеть список возможных валют,введите currency");
-        System.out.println("Если историю history и ISO валюты");
-        System.out.println("Пример запроса: history USD");
-        System.out.println("Доступные тайм фреймы tomorrow, week");
-        System.out.println("Для выхода введите exit");
+    public String helpText() {
+        return "trading-assistant\n"+
+        "Пример запроса: rate USD week\n"+
+        "Если хотите увидеть список возможных валют,введите currency\n"+
+        "Если историю history и ISO валюты\n"+
+        "Пример запроса: history USD\n"+
+        "Доступные тайм фреймы tomorrow, week\n"+
+        "Для выхода введите exit";
     }
 
     /**
      * создает объект типа Request
-     * @param inputString строка введенная пользователем
+//     * @param inputString строка введенная пользователем
      * @return запрос
      */
-    private static Request getRequestForPrediction(String inputString) {
-        String[] param;
-        Request request;
+    private  Request getRequestForPrediction(Request request) {
+
         try {
-            param = inputString.split(" ");
-            request = new Request(param);
             if (!checkRequest(request)) {
                 throw new IllegalArgumentException("Введите верный запрос");
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            request = getRequestForPrediction();
+            request = getRequestForPrediction(request);
         }
         return request;
     }
 
     /**
      * метод выводит исторические данные в консоль
-     * @param inputString введенная строка
+     *
      */
-    private static void getHistory(String inputString) {
-        String[] ISO = {"history", inputString.split(" ")[1], ""};
-        Request historyRequest = new Request(ISO);
+    private static String getHistory(Request request) {
         List<Case> data = null;
         try {
-            data = DataHelper.getData(historyRequest);
-            data.forEach(System.out::println);
+            data = DataHelper.getData(request);
+            System.out.println(data);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        return data.toString();
     }
-
     /**
      * Проверка запроса
      * Если введеный ISO код есть в базе доступных валют, то return true
@@ -104,9 +109,9 @@ public class RequestHelper {
      * @return результат проверки
      */
 
-    private static boolean checkRequest(Request request) {
+    private boolean checkRequest(Request request) {
         boolean currency = Currency.getCurrencyMap().containsKey(request.getISO_Char_Code());
-        boolean period = request.getTimeFrame().matches("week|tomorrow");//|month
+        boolean period = request.getPeriod().matches("week|tomorrow");//|month
         if (!currency) {
             System.out.println("невозможно получить информацию по этой валюте");
         }

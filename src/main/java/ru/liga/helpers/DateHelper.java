@@ -20,9 +20,9 @@ public class DateHelper {
     }
 //    сколько дней добавить
     public static int getCountDays(Request request) {
-        if (request.getTimeFrame().equals("tomorrow")) {
+        if (request.getPeriod().equals("tomorrow")) {
             return 1;
-        } else if (request.getTimeFrame().equals("week")) {
+        } else if (request.getPeriod().equals("week")) {
             return 7;
         }
 //        else if (request.getTimeFrame().equals("month")){
