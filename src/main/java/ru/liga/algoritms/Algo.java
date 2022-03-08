@@ -45,6 +45,9 @@ public abstract class Algo {
         if (request.getAlgoritm().equals("lr")) {
             return new LineRegression(data, request);
         }
+        if(request.getAlgoritm().equals("lri")){
+            return new LineRegressionFromInternet(data,request);
+        }
         return null;
     }
 
