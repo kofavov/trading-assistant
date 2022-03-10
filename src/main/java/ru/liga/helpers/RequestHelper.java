@@ -25,54 +25,19 @@ public class RequestHelper {
         return "что-то не так";
     }
 
-//    private static final Scanner scanner = new Scanner(System.in);
-
-    /**
-     * Метод считывает ввод пользователя и на его основе обращается к другим методам
-     * Если ввели exit программа завершается
-     * @return Request - запрос пользователя
-     */
-//    public static Request getRequestForPrediction() {
-//        Scanner scanner = new Scanner(System.in);
-//        Request request = null;
-//        String[] param;
-//        System.out.println("Введите запрос");
-//        String inputString = scanner.nextLine();
-//
-//        if (inputString.equals("currency")) {
-//            Currency.getCurrencyMap().values().forEach(System.out::println);
-//            request = getRequestForPrediction();
-//        } else if (inputString.contains("history")) {
-//            getHistory(inputString);
-//            request = getRequestForPrediction();
-//        } else if (inputString.equals("exit")) {
-//            request = new Request(true);
-//        } else {
-//            request = getRequestForPrediction(inputString);
-//        }
-//        return request;
-//    }
     @SneakyThrows
     private String getPrediction(Request request){
-        List<Case> data = DataHelper.getData(request);
-        Algo algo = Algo.getAlgo(data,request);
-        List<Case> predictionData = algo.getPrediction();
+        List<Case> predictionData = getPredictionData(request);
         StringBuilder stringBuilder = new StringBuilder();
         predictionData.forEach(s->stringBuilder.append(s).append("\n"));
         return stringBuilder.toString();
     }
 
-    public static Request getAlgoRequest(Request request){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Выберите алгоритм");
-        System.out.println("avg или lr");
-        try {
-            request.setAlgoritm(scanner.nextLine());
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            request = getAlgoRequest(request);
-        }
-        return request;
+    private List<Case> getPredictionData(Request request) throws Exception {
+        List<Case> data = DataHelper.getData(request);
+        Algo algo = Algo.getAlgo(data, request);
+        List<Case> predictionData = algo.getPrediction();
+        return predictionData;
     }
 
     public String helpText() {
@@ -83,24 +48,6 @@ public class RequestHelper {
         "Пример запроса: history USD\n"+
         "Доступные тайм фреймы tomorrow, week\n"+
         "Для выхода введите exit";
-    }
-
-    /**
-     * создает объект типа Request
-//     * @param inputString строка введенная пользователем
-     * @return запрос
-     */
-    private  Request getRequestForPrediction(Request request) {
-
-        try {
-            if (!checkRequest(request)) {
-                throw new IllegalArgumentException("Введите верный запрос");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            request = getRequestForPrediction(request);
-        }
-        return request;
     }
 
     /**
@@ -139,12 +86,17 @@ public class RequestHelper {
     }
 
     @SneakyThrows
-    public InputFile executeRequestForGraph(Request request) {
+    public InputFile executeGraphRequest(Request request) {
+        Graph graph = new Graph();
         switch (request.getTypeRequest()){
             case "/history":{
-                Graph graph = new Graph();
                 List<Case> data = getHistory(request);
                 Collections.reverse(data);
+                graph.draw(data);
+                break;
+            }
+            case "/rate":{
+                List<Case> data = getPredictionData(request);
                 graph.draw(data);
                 break;
             }

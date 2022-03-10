@@ -37,9 +37,11 @@ public class Currency {
         } catch (Exception e) {
             System.out.println("Данные из ЦБ недоступны Будут использоваться локальные");
             System.out.println(e.getMessage());
-            CURRENCY_MAP.put("USD", new Currency(ru.liga.model.CurrencyEnum.USD));
-            CURRENCY_MAP.put("EUR", new Currency(ru.liga.model.CurrencyEnum.EUR));
-            CURRENCY_MAP.put("TRY", new Currency(ru.liga.model.CurrencyEnum.TRY));
+            CURRENCY_MAP.put("USD", new Currency(CurrencyEnum.USD));
+            CURRENCY_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
+            CURRENCY_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
+            CURRENCY_MAP.put("AMD", new Currency(CurrencyEnum.AMD));
+            CURRENCY_MAP.put("BGN", new Currency(CurrencyEnum.BGN));
         }
     }
 
