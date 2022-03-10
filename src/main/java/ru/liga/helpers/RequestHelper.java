@@ -36,8 +36,7 @@ public class RequestHelper {
     private List<Case> getPredictionData(Request request) throws Exception {
         List<Case> data = DataHelper.getData(request);
         Algo algo = Algo.getAlgo(data, request);
-        List<Case> predictionData = algo.getPrediction();
-        return predictionData;
+        return algo.getPrediction();
     }
 
     public String helpText() {
@@ -62,7 +61,7 @@ public class RequestHelper {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return data;
+        return Objects.requireNonNull(data).subList(0,30);
     }
     /**
      * Проверка запроса
@@ -92,12 +91,12 @@ public class RequestHelper {
             case "/history":{
                 List<Case> data = getHistory(request);
                 Collections.reverse(data);
-                graph.draw(data);
+                graph.draw(data,request);
                 break;
             }
             case "/rate":{
                 List<Case> data = getPredictionData(request);
-                graph.draw(data);
+                graph.draw(data,request);
                 break;
             }
         }

@@ -6,5 +6,5 @@ import ru.liga.model.Request;
 import java.util.List;
 
 public interface Parser {
-    List<Case> getData(Request request) throws Exception;
+//    List<Case> getData(Request request) throws Exception;
 }

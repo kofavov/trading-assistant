@@ -14,39 +14,39 @@ import java.util.List;
 
 public class AVGTest {
 
-    @Test
-    public void weekAvgTest() throws Exception{
-        Request request = new Request("rate", "USD", "week");
-        Parser parser = new CSVParser();
-        List<Case> data = parser.getData(request);
-        Algo algo = new AverageForTheWeekAlgo(data, request);
-        List<Case> futurePoint = algo.getPrediction();
-        Assert.assertEquals(7, futurePoint.size());
-    }
-
-    @Test
-    public void tomorrowAvgTest() throws Exception {
-        Request request = new Request("rate", "USD", "tomorrow");
-        Parser parser = new CSVParser();
-        List<Case> data = parser.getData(request);
-        Algo algo = new AverageForTheWeekAlgo(data, request);
-        List<Case> futurePoint = algo.getPrediction();
-        Assert.assertEquals(1, futurePoint.size());
-    }
-
-    @Test
-    public void checkOrderWeekAvg() throws Exception {
-        Request request = new Request("rate", "USD", "week");
-        Parser parser = new CSVParser();
-        List<Case> data = parser.getData(request);
-        Algo algo = new AverageForTheWeekAlgo(data, request);
-        List<Case> futurePoint = algo.getPrediction();
-        boolean check = false;
-        for (int i = 0; i < futurePoint.size() - 2; i++) {
-            check = futurePoint.get(i).getDate().isBefore(futurePoint.get(++i).getDate());
-        }
-        Assert.assertTrue(check);
-    }
+//    @Test
+//    public void weekAvgTest() throws Exception{
+//        Request request = new Request("rate", "USD", "week");
+//        Parser parser = new CSVParser();
+//        List<Case> data = parser.getData(request);
+//        Algo algo = new AverageForTheWeekAlgo(data, request);
+//        List<Case> futurePoint = algo.getPrediction();
+//        Assert.assertEquals(7, futurePoint.size());
+//    }
+//
+//    @Test
+//    public void tomorrowAvgTest() throws Exception {
+//        Request request = new Request("rate", "USD", "tomorrow");
+//        Parser parser = new CSVParser();
+//        List<Case> data = parser.getData(request);
+//        Algo algo = new AverageForTheWeekAlgo(data, request);
+//        List<Case> futurePoint = algo.getPrediction();
+//        Assert.assertEquals(1, futurePoint.size());
+//    }
+//
+//    @Test
+//    public void checkOrderWeekAvg() throws Exception {
+//        Request request = new Request("rate", "USD", "week");
+//        Parser parser = new CSVParser();
+//        List<Case> data = parser.getData(request);
+//        Algo algo = new AverageForTheWeekAlgo(data, request);
+//        List<Case> futurePoint = algo.getPrediction();
+//        boolean check = false;
+//        for (int i = 0; i < futurePoint.size() - 2; i++) {
+//            check = futurePoint.get(i).getDate().isBefore(futurePoint.get(++i).getDate());
+//        }
+//        Assert.assertTrue(check);
+//    }
 
 
 }

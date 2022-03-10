@@ -8,6 +8,7 @@ import com.github.sh0nk.matplotlib4j.builder.HistBuilder;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.model.Case;
+import ru.liga.model.Request;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ import java.util.stream.IntStream;
 @Slf4j
 public class Graph {
 
-    public void draw(List<Case> data){
+    public void draw(List<Case> data, Request request){
         List<Double> x = NumpyUtils.linspace(0, data.size(), data.size());
         List<Double> C = data.stream().map(c->c.getValue()).collect(Collectors.toList());
 
@@ -26,7 +27,7 @@ public class Graph {
         plt.plot().add(x, C).color("blue").linewidth(2.5).linestyle("-");
 
         try {
-            plt.title(data.get(0).getCurrency());
+            plt.title(request.getISO_Char_Code());
             plt.savefig("graph.png").dpi(200);
             plt.executeSilently();
         } catch (IOException | PythonExecutionException e) {

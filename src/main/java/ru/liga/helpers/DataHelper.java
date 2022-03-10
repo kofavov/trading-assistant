@@ -5,9 +5,10 @@ import ru.liga.model.Case;
 import ru.liga.model.Request;
 import ru.liga.parsers.CBRFExchange;
 import ru.liga.parsers.CSVParser;
-import ru.liga.parsers.Parser;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Slf4j
@@ -24,20 +25,30 @@ public class DataHelper {
      */
     public static List<Case> getData(Request request) throws Exception {
         List<Case> data;
-        try {
-            Parser parser = new CBRFExchange();
-            data = parser.getData(request);
-            log.info("Данные по запросу {} получены из ЦБ", request.toString());
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Данные с сервера ЦБРФ недоступны\n" +
-                    "Используются локальные данные");
-            Parser parser = new CSVParser();
-            data = parser.getData(request);
-            log.info("Данные по запросу {} получены из csv файла", request.toString());
+//        try {
+//            Parser parser = new CBRFExchange();
+//            data = parser.getData(request);
+//            log.info("Данные по запросу {} получены из ЦБ", request.toString());
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            System.out.println("Данные с сервера ЦБРФ недоступны\n" +
+//                    "Используются локальные данные");
+//            Parser parser = new CSVParser();
+//            data = parser.getData(request);
+//            log.info("Данные по запросу {} получены из csv файла", request.toString());
+//        }
+        CSVParser csvParser = new CSVParser();
+        data = csvParser.getData(request);
+        if (data.isEmpty() || data.get(0).getDate().isBefore(LocalDate.now())) {
+            CBRFExchange cbrfExchange = new CBRFExchange();
+            int missDay = data.isEmpty() ? 7
+                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+            List<Case> newCases = cbrfExchange.getData(request, missDay);
+            data.addAll(0, newCases);
         }
         if (data.isEmpty()) throw new IOException("нет данных");
+        data.get(0).setCurrency(request.getISO_Char_Code());
         return data;
     }
 }

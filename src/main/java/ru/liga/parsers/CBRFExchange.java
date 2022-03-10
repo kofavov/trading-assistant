@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 public class CBRFExchange implements Parser {
 
-    public List<Case> getData(Request request) throws Exception {
+    public List<Case> getData(Request request,int missDay) throws Exception {
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
         List<Case> data = new ArrayList<>();
         if (request.getAlgoritm().equals("act")){
@@ -36,10 +36,9 @@ public class CBRFExchange implements Parser {
         }
         //возможно есть инфа на завтра
         LocalDate tomorrow = request.getDate().plusDays(1);
-        int historyTimeFrame = 7;//сколько дней загружаем
 
         System.out.println("Выполнение запроса " + request + " к ЦБ ");
-        getDataFromCBRF(data, tomorrow, historyTimeFrame, currency);
+        getDataFromCBRF(data, tomorrow, missDay, currency);
         Collections.reverse(data);
         return data;
     }
@@ -61,11 +60,9 @@ public class CBRFExchange implements Parser {
 
 
 
-    private void getDataFromCBRF(List<Case> data, LocalDate tomorrow, int historyTimeFrame, Currency currency) throws Exception {
-        for (int i = 0; data.size() < historyTimeFrame; i++) {
-            if (i > 25) {
-                throw new Exception("Невозможно получить данные из ЦБ");
-            }
+    private void getDataFromCBRF(List<Case> data, LocalDate tomorrow, int missDays, Currency currency) throws Exception {
+        for (int i = 0; i <= missDays; i++) {
+
             //сервер допускает 5 запросов в секунду
             //sleep вначале так как выполняется запрос getCurrencyMap
             try {
