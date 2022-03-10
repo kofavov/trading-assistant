@@ -1,11 +1,15 @@
 package ru.liga.helpers;
 
 import lombok.SneakyThrows;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
 import ru.liga.model.Currency;
 import ru.liga.model.Request;
+import ru.liga.view.Graph;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -15,7 +19,7 @@ public class RequestHelper {
         switch (request.getTypeRequest()){
             case "/help":return helpText();
             case "/currency":return Currency.getCurrencyMapToString();
-            case "/history":return getHistory(request);
+            case "/history":return getHistory(request).toString();
             case "/rate":return getPrediction(request);
         }
         return "что-то не так";
@@ -103,7 +107,7 @@ public class RequestHelper {
      * метод выводит исторические данные в консоль
      *
      */
-    private static String getHistory(Request request) {
+    private static List<Case> getHistory(Request request) {
         List<Case> data = null;
         try {
             data = DataHelper.getData(request);
@@ -111,7 +115,7 @@ public class RequestHelper {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return data.toString();
+        return data;
     }
     /**
      * Проверка запроса
@@ -132,5 +136,19 @@ public class RequestHelper {
             System.out.println("невозможно получить прогноз на данный период");
         }
         return currency && period;
+    }
+
+    @SneakyThrows
+    public InputFile executeRequestForGraph(Request request) {
+        switch (request.getTypeRequest()){
+            case "/history":{
+                Graph graph = new Graph();
+                List<Case> data = getHistory(request);
+                Collections.reverse(data);
+                graph.draw(data);
+                break;
+            }
+        }
+        return new InputFile(new File("graph.png"));
     }
 }

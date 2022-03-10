@@ -4,13 +4,15 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.helpers.RequestHelper;
-import ru.liga.model.Currency;
 import ru.liga.model.Request;
 
+import java.io.File;
 import java.util.Optional;
 
 @Slf4j
@@ -23,6 +25,7 @@ public final class Bot extends TelegramLongPollingBot {
         }
 
     }
+
     @SneakyThrows
     private void handleMessage(Message message) {
         // We check if the update has a message and the message has text
@@ -37,9 +40,13 @@ public final class Bot extends TelegramLongPollingBot {
                 execute(SendMessage.builder().text(request + " выполняется")
                         .chatId(message.getChatId().toString())
                         .build());
-                execute(SendMessage.builder().text(requestHelper.executeRequest(request))
+                if (!request.getOutput().equals("graph")){
+                    execute(SendMessage.builder().text(requestHelper.executeRequest(request))
+                            .chatId(message.getChatId().toString())
+                            .build());}
+                else {execute(SendPhoto.builder().photo(requestHelper.executeRequestForGraph(request))
                         .chatId(message.getChatId().toString())
-                        .build());
+                        .build());}
             }
         }
     }
