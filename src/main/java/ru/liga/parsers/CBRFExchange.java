@@ -37,7 +37,7 @@ public class CBRFExchange implements Parser {
         //возможно есть инфа на завтра
         LocalDate tomorrow = request.getDate().plusDays(1);
 
-        System.out.println("Выполнение запроса " + request + " к ЦБ ");
+        log.info("Выполнение запроса {} к ЦБ ",request);
         getDataFromCBRF(data, tomorrow, missDay, currency);
         Collections.reverse(data);
         return data;
