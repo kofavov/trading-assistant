@@ -60,15 +60,13 @@ public class DataHelper {
             csvParser.saveData(newCases, request);
         }
         if (!newCases.isEmpty() && newCases.get(0).getDate().isBefore(LocalDate.now())) {
-            int missDay = data.isEmpty() ? 25
-                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+            int missDay = (int) ChronoUnit.DAYS.between(newCases.get(0).getDate(), LocalDate.now());
             CBRFExchange cbrfExchange = new CBRFExchange();
             newCases = cbrfExchange.getData(request, missDay);
             csvParser.saveData(newCases, request);
         }
         if (newCases.isEmpty() && !data.isEmpty() && data.get(0).getDate().isBefore(LocalDate.now())) {
-            int missDay = data.isEmpty() ? 25
-                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+            int missDay = (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
             CBRFExchange cbrfExchange = new CBRFExchange();
             newCases = cbrfExchange.getData(request, missDay);
             csvParser.saveData(newCases, request);
