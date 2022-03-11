@@ -40,13 +40,41 @@ public class DataHelper {
 //        }
         CSVParser csvParser = new CSVParser();
         data = csvParser.getData(request);
-        if (data.isEmpty() || data.get(0).getDate().isBefore(LocalDate.now())) {
+        List<Case> newCases = csvParser.getNewData(request);
+        boolean emptyLists = data.isEmpty() && newCases.isEmpty();
+//        if (emptyLists) {
+//            boolean dateBeforeNow = (data.get(0).getDate().isBefore(LocalDate.now())
+//                && newCases.get(0).getDate().isBefore(LocalDate.now()));
+//            if (dateBeforeNow) {
+//                CBRFExchange cbrfExchange = new CBRFExchange();
+//                int missDay = data.isEmpty() ? 25
+//                        : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+//                newCases = cbrfExchange.getData(request, missDay);
+//                csvParser.saveData(newCases, request);
+//            }
+//        }
+        if (emptyLists) {
+            int missDay = 25;
             CBRFExchange cbrfExchange = new CBRFExchange();
-            int missDay = data.isEmpty() ? 7
-                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
-            List<Case> newCases = cbrfExchange.getData(request, missDay);
-            data.addAll(0, newCases);
+            newCases = cbrfExchange.getData(request, missDay);
+            csvParser.saveData(newCases, request);
         }
+        if (!newCases.isEmpty() && newCases.get(0).getDate().isBefore(LocalDate.now())) {
+            int missDay = data.isEmpty() ? 25
+                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+            CBRFExchange cbrfExchange = new CBRFExchange();
+            newCases = cbrfExchange.getData(request, missDay);
+            csvParser.saveData(newCases, request);
+        }
+        if (newCases.isEmpty() && !data.isEmpty() && data.get(0).getDate().isBefore(LocalDate.now())) {
+            int missDay = data.isEmpty() ? 25
+                    : (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
+            CBRFExchange cbrfExchange = new CBRFExchange();
+            newCases = cbrfExchange.getData(request, missDay);
+            csvParser.saveData(newCases, request);
+        }
+
+        data.addAll(0, newCases);
         if (data.isEmpty()) throw new IOException("нет данных");
         data.get(0).setCurrency(request.getISO_Char_Code());
         return data;

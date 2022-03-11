@@ -61,7 +61,7 @@ public class RequestHelper {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return Objects.requireNonNull(data).subList(0,30);
+        return Objects.requireNonNull(data).subList(0, Math.min(data.size(), 30));
     }
     /**
      * Проверка запроса
