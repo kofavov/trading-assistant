@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.helpers.RequestHelper;
-import ru.liga.model.Request;
+import ru.liga.model.RequestManyCurrency;
 
 import java.util.Optional;
 
@@ -33,16 +33,16 @@ public final class Bot extends TelegramLongPollingBot {
             if (entity.isPresent()) {
                 String command = message.getText();
                 log.info(command);
-                Request request = new Request(command);
-                RequestHelper requestHelper = new RequestHelper();
-                execute(SendMessage.builder().text(request + " выполняется")
+                RequestManyCurrency requestManyCurrency = new RequestManyCurrency(command);
+                RequestHelper requestHelper = new RequestHelper(requestManyCurrency);
+                execute(SendMessage.builder().text(requestManyCurrency + " выполняется")
                         .chatId(message.getChatId().toString())
                         .build());
-                if (!request.getOutput().equals("graph")){
-                    execute(SendMessage.builder().text(requestHelper.executeRequest(request))
+                if (!requestManyCurrency.getOutput().equals("graph")){
+                    execute(SendMessage.builder().text(requestHelper.executeRequest())
                             .chatId(message.getChatId().toString())
                             .build());}
-                else {execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest(request))
+                else {execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
                         .chatId(message.getChatId().toString())
                         .build());}
             }

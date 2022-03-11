@@ -54,7 +54,7 @@ public class DataHelper {
 //            }
 //        }
         if (emptyLists) {
-            int missDay = 25;
+            int missDay = 50;
             CBRFExchange cbrfExchange = new CBRFExchange();
             newCases = cbrfExchange.getData(request, missDay);
             csvParser.saveData(newCases, request);

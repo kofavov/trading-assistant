@@ -15,7 +15,6 @@ public class Request {
     private String typeRequest = "";
     private String ISO_Char_Code = "";//USD, EUR, TRY и т.д.
     private String period = "";//tomorrow, week
-    private boolean exit = false;
     private String algoritm = "";
     private String output = "";
     private LocalDate date = LocalDate.now();
@@ -46,15 +45,13 @@ public class Request {
         this.period = timeFrame;
     }
 
-    public Request(boolean exit) {
-        this.exit = exit;
-    }
-
-    public void setAlgoritm(String algoritm) throws Exception {
-        if (!algoritm.equals("avg") && !algoritm.equals("lr")) {
-            throw new Exception("Введите алгоритм из списка");
-        }
-        this.algoritm = algoritm;
+    public Request(RequestManyCurrency requestManyCurrency, String s) {
+        this.ISO_Char_Code = s;
+        this.period = requestManyCurrency.getPeriod();
+        this.date = requestManyCurrency.getDate();
+        this.typeRequest = requestManyCurrency.getTypeRequest();
+        this.output = requestManyCurrency.getOutput();
+        this.algoritm = requestManyCurrency.getAlgoritm();
     }
 
     @Override

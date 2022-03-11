@@ -2,32 +2,40 @@ package ru.liga.view;
 
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
-import com.github.sh0nk.matplotlib4j.PythonConfig;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
-import com.github.sh0nk.matplotlib4j.builder.HistBuilder;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 @Slf4j
 public class Graph {
+    private List<List<Case>> allData = new ArrayList<>();
+    private List<Request> requests = new ArrayList<>();
 
-    public void draw(List<Case> data, Request request){
-        List<Double> x = NumpyUtils.linspace(0, data.size(), data.size());
-        List<Double> C = data.stream().map(c->c.getValue()).collect(Collectors.toList());
+    public void addData(List<Case> dataOneCurrency, Request request) {
+        allData.add(dataOneCurrency);
+        requests.add(request);
+    }
 
+    public void draw() {
+        List<Double> x = NumpyUtils.linspace(0, allData.get(0).size(), allData.get(0).size());
+        StringBuilder stringBuilder = new StringBuilder();
         Plot plt = Plot.create();
-        plt.plot().add(x, C).color("blue").linewidth(2.5).linestyle("-");
-
+        for (int i = 0; i < allData.size(); i++) {
+            List<Case> data = allData.get(i);
+            Request request = requests.get(i);
+            String color = Color.getColorById(i);
+            List<Double> C = data.stream().map(c -> c.getValue()).collect(Collectors.toList());
+            plt.plot().add(x, C).color(color).linewidth(2.5).linestyle("-");
+            stringBuilder.append(request.getISO_Char_Code()).append("-").append(color).append(" ");
+        }
         try {
-            plt.title(request.getISO_Char_Code());
+            plt.title(stringBuilder.toString());
             plt.savefig("graph.png").dpi(200);
             plt.executeSilently();
         } catch (IOException | PythonExecutionException e) {
