@@ -23,15 +23,16 @@ public class RequestHelper {
 
     public String executeRequest() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
+        switch (requestManyCurrency.getTypeRequest()) {
+            case "/help":
+                stringBuilder.append(helpText());
+                break;
+            case "/currency":
+                stringBuilder.append(Currency.getCurrencyMapToString());
+                break;}
         for (String s : requestManyCurrency.getISO_Char_Codes()) {
             Request request = new Request(requestManyCurrency, s);
             switch (requestManyCurrency.getTypeRequest()) {
-                case "/help":
-                    stringBuilder.append(helpText());
-                    break;
-                case "/currency":
-                    stringBuilder.append(Currency.getCurrencyMapToString());
-                    break;
                 case "/history":
                     stringBuilder.append("history for ").append(s).append("\n")
                             .append(getHistoryString(request));

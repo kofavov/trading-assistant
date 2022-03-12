@@ -14,7 +14,7 @@ import java.util.List;
 
 public class CSVParser implements ru.liga.parsers.Parser {
     @SuppressWarnings("resource")
-    public List<Case> getData(Request request) throws IOException {
+    public List<Case> getOldData(Request request) throws IOException {
         List<Case> data = new ArrayList<>();
         File file = new File(request.getISO_Char_Code() + ".csv");
         if (file.exists()) {

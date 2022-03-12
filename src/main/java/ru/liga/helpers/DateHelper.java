@@ -18,6 +18,10 @@ public class DateHelper {
         else if (curDate.contains("вс")) return 2;
         return 1;
     }
+    public static boolean checkWeekend(LocalDate date){
+        return date.getDayOfWeek().equals(DayOfWeek.SATURDAY)
+                || date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+    }
 //    сколько дней добавить
     public static int getCountDays(Request request) {
         if (request.getPeriod().equals("tomorrow")) {

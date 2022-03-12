@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.RequestManyCurrency;
 
+import java.io.File;
 import java.util.Optional;
 
 @Slf4j
@@ -21,7 +22,6 @@ public final class Bot extends TelegramLongPollingBot {
         if (update.hasMessage()) {
             handleMessage(update.getMessage());
         }
-
     }
 
     @SneakyThrows

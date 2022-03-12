@@ -29,7 +29,7 @@ public class Graph {
         for (int i = 0; i < allData.size(); i++) {
             List<Case> data = allData.get(i);
             Request request = requests.get(i);
-            String color = Color.getColorById(i);
+            String color = Color.getColorById(i%5);
             List<Double> C = data.stream().map(c -> c.getValue()).collect(Collectors.toList());
             plt.plot().add(x, C).color(color).linewidth(2.5).linestyle("-");
             stringBuilder.append(request.getISO_Char_Code()).append("-").append(color).append(" ");

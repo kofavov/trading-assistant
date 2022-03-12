@@ -30,10 +30,10 @@ public class CBRFExchange implements Parser {
     public List<Case> getData(Request request,int missDay) throws Exception {
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
         List<Case> data = new ArrayList<>();
-        if (request.getAlgoritm().equals("act")){
-             getDataForActualAlgo(data,request,currency);
-             return data;
-        }
+//        if (request.getAlgoritm().equals("act")){
+//             getDataForActualAlgo(data,request,currency);
+//             return data;
+//        }
         //возможно есть инфа на завтра
         LocalDate tomorrow = request.getDate().plusDays(1);
 
@@ -43,7 +43,7 @@ public class CBRFExchange implements Parser {
         return data;
     }
     @SneakyThrows
-    private void getDataForActualAlgo(List<Case> data,Request request, Currency currency){
+    public void getDataForActualAlgo(List<Case> data,Request request, Currency currency){
         List<List<Case>> doubleData = new ArrayList<>();
         while ( doubleData.size() < 2) {
             List<Case> tempList = new ArrayList<>();
