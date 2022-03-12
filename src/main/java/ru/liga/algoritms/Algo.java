@@ -32,6 +32,7 @@ public abstract class Algo {
         stopDay = lastDayInList.plusDays(countDaysForPredict);
         //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза на 7 дней
         if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
+        if (countDaysForPredict == 30) stopDay = stopDay.plusDays(8);
         //если есть завтрашние данные -1 прогнозируемый день
         if (lastDayInList.isAfter(LocalDate.now())){
            stopDay = stopDay.minusDays(1);

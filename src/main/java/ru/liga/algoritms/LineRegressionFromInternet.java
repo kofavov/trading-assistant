@@ -3,6 +3,7 @@ package ru.liga.algoritms;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,21 +20,23 @@ public class LineRegressionFromInternet extends Algo{
 
     @Override
     public List<Case> getPrediction() {
+        List<Case> oldCases = new ArrayList<>(newData.subList(0,7));
         while (newData.get(0).getDate().isBefore(stopDay)) {
-            double newValue = process();
+            double newValue = process(oldCases);
             addNewCase(newData, newValue);
+            addNewCase(oldCases,newValue);
         }
         newData = newData.subList(0, countDaysForPredict);
         Collections.reverse(newData);
         return newData;
     }
 
-    private double process() {
-        double [] x = new double[newData.size()];
-        double [] y = new double[newData.size()];
-        for (int i = 0; i < newData.size(); i++) {
+    private double process(List<Case> oldCases) {
+        double [] x = new double[oldCases.size()];
+        double [] y = new double[oldCases.size()];
+        for (int i = 0; i < oldCases.size(); i++) {
             x [i] = i;
-            y [i] = newData.get(i).getValue();
+            y [i] = oldCases.get(i).getValue();
         }
         LinearRegression linearRegression = new LinearRegression(x,y);
         return linearRegression.predict(0);
