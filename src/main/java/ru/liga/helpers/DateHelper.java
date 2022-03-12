@@ -19,7 +19,7 @@ public class DateHelper {
         return 1;
     }
     public static boolean checkWeekend(LocalDate date){
-        return date.getDayOfWeek().equals(DayOfWeek.SATURDAY)
+        return date.getDayOfWeek().equals(DayOfWeek.MONDAY)
                 || date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
     }
 //    сколько дней добавить

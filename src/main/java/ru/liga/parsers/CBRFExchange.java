@@ -51,6 +51,7 @@ public class CBRFExchange implements Parser {
             tempDay = DateHelper.checkDayOfWeek(tempDay);
             int historyTimeFrame = DateHelper.getCountDays(request);
             if (historyTimeFrame == 7) tempDay = tempDay.plusDays(2);
+            if (historyTimeFrame == 30) tempDay = tempDay.plusDays(8);
             getDataFromCBRF(tempList, tempDay.plusDays(historyTimeFrame), historyTimeFrame,currency);
             doubleData.add(tempList);
         }
@@ -62,7 +63,6 @@ public class CBRFExchange implements Parser {
 
     private void getDataFromCBRF(List<Case> data, LocalDate tomorrow, int missDays, Currency currency) throws Exception {
         for (int i = 0; i <= missDays; i++) {
-
             //сервер допускает 5 запросов в секунду
             //sleep вначале так как выполняется запрос getCurrencyMap
             try {

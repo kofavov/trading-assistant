@@ -100,9 +100,13 @@ public class DataHelper {
     }
 
     private static List<Case> getDataForActAlgo(Request request) {
+        CSVParser csvParser = new CSVParser();
         CBRFExchange cbrfExchange = new CBRFExchange();
-        List<Case> cases = new ArrayList<>();
-        cbrfExchange.getDataForActualAlgo(cases, request, Currency.getCurrencyMap().get(request.getISO_Char_Code()));
-        return cases;
+        List<Case> data = new ArrayList<>(csvParser.getActAlgoData(request));
+
+        if (data.isEmpty()) {
+            cbrfExchange.getDataForActualAlgo(data, request, Currency.getCurrencyMap().get(request.getISO_Char_Code()));
+        }
+        return data;
     }
 }

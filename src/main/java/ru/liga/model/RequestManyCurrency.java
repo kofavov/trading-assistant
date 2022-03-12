@@ -39,7 +39,13 @@ public class RequestManyCurrency {
                     break;
                 case "-date":
                     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                    this.date = LocalDate.parse(simpleCommands[++i], dateTimeFormatter);
+                    String s = simpleCommands[++i];
+                    if (s.equals("tomorrow")) {
+                        this.period = s;
+                        date = LocalDate.now().plusDays(1);
+                    } else {
+                        this.date = LocalDate.parse(s, dateTimeFormatter);
+                    }
                     break;
             }
         }

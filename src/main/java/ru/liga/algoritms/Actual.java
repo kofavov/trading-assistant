@@ -1,8 +1,10 @@
 package ru.liga.algoritms;
 
+import ru.liga.helpers.DateHelper;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +21,6 @@ public class Actual extends Algo{
     @Override
     public List<Case> getPrediction() {
         getNewData();
-        Collections.reverse(newData);
         return newData;
     }
 
@@ -27,14 +28,18 @@ public class Actual extends Algo{
         List<Case> threeYearsAgoData = newData.subList(0,newData.size()/2);
         List<Case> twoYearsAgoData = newData.subList(newData.size()/2,newData.size());
         newData = new ArrayList<>();
-        for (int i = 0; i < threeYearsAgoData.size(); i++) {
+        for (int i = 0, j = 0; newData.size() < threeYearsAgoData.size(); i++,j++) {
             Case c = new Case();
             c.setCurrency(request.getISO_Char_Code());
-            c.setDate(request.getDate().plusDays(i));
+            LocalDate day = request.getDate().plusDays(j);
+            if (DateHelper.checkWeekend(day)){
+                i--;
+                continue;
+            }
+            c.setDate(day);
             c.setValue(threeYearsAgoData.get(i).getValue()+twoYearsAgoData.get(i).getValue());
             c.setNominal(threeYearsAgoData.get(i).getNominal());
             newData.add(c);
         }
-        Collections.reverse(newData);
     }
 }
