@@ -106,7 +106,7 @@ public class Currency {
     }
     public static String getCurrencyMapToString(){
         StringBuilder stringBuilder  = new StringBuilder();
-        getCurrencyMap().entrySet().forEach(s->stringBuilder.append(s).append("\n"));
+        getCurrencyMap().forEach((key, value) -> stringBuilder.append(value).append("\n"));
         return stringBuilder.toString();
     }
 
