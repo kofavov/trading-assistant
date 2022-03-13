@@ -25,36 +25,7 @@ public class DataHelper {
      * @return List с историческими данными
      * @throws IOException если файла не существует или данные отсутствуют
      */
-//    public static List<Case> getData(Request request) throws Exception {
-//        List<Case> data;
-//        CSVParser csvParser = new CSVParser();
-//        data = csvParser.getData(request);
-//        List<Case> newCases = csvParser.getNewData(request);
-//        boolean emptyLists = data.isEmpty() && newCases.isEmpty();
-//        if (emptyLists) {
-//            int missDay = 50;
-//            CBRFExchange cbrfExchange = new CBRFExchange();
-//            newCases = cbrfExchange.getData(request, missDay);
-//            csvParser.saveData(newCases, request);
-//        } else if (!newCases.isEmpty() && newCases.get(0).getDate().isBefore(LocalDate.now()) &&
-//                !DateHelper.checkWeekend(LocalDate.now().plusDays(1))) {
-//            int missDay = (int) ChronoUnit.DAYS.between(newCases.get(0).getDate(), LocalDate.now());
-//            CBRFExchange cbrfExchange = new CBRFExchange();
-//            newCases = cbrfExchange.getData(request, missDay);
-//            csvParser.saveData(newCases, request);
-//        } else if (newCases.isEmpty() && !data.isEmpty() && data.get(0).getDate().isBefore(LocalDate.now())
-//                && !DateHelper.checkWeekend(LocalDate.now().plusDays(1))) {
-//            int missDay = (int) ChronoUnit.DAYS.between(data.get(0).getDate(), LocalDate.now());
-//            CBRFExchange cbrfExchange = new CBRFExchange();
-//            newCases = cbrfExchange.getData(request, missDay);
-//            csvParser.saveData(newCases, request);
-//        }
-//
-//        data.addAll(0, newCases);
-//        if (data.isEmpty()) throw new IOException("нет данных");
-//        data.get(0).setCurrency(request.getISO_Char_Code());
-//        return data;
-//    }
+
     public static List<Case> getData(Request request) throws Exception {
         if (request.getAlgoritm().equals("act")){
             return getDataForActAlgo(request);
@@ -99,7 +70,7 @@ public class DataHelper {
         return data;
     }
 
-    private static List<Case> getDataForActAlgo(Request request) {
+    private static List<Case> getDataForActAlgo(Request request){
         CSVParser csvParser = new CSVParser();
         CBRFExchange cbrfExchange = new CBRFExchange();
         List<Case> data = new ArrayList<>(csvParser.getActAlgoData(request));

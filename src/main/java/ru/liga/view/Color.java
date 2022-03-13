@@ -1,17 +1,16 @@
 package ru.liga.view;
 
 public enum Color {
-    Red("red",0),
-    Blue("blue",1),
-    Green("green",2),
-    Orange("orange",3),
-    Brown("brown", 4);
+    Red("red"),
+    Blue("blue"),
+    Green("green"),
+    Orange("orange"),
+    Brown("brown");
 
     String color;
-    int idColor;
-    Color(String color,int idColor) {
+
+    Color(String color) {
         this.color = color;
-        this.idColor = idColor;
     }
 
     public static String getColorById(int i) {

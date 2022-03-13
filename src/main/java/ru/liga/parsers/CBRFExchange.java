@@ -27,23 +27,24 @@ import java.util.List;
 @Slf4j
 public class CBRFExchange implements Parser {
 
-    public List<Case> getData(Request request,int missDay) throws Exception {
+    public List<Case> getData(Request request,int missDay) {
         Currency currency = Currency.getCurrencyMap().get(request.getISO_Char_Code());
         List<Case> data = new ArrayList<>();
-//        if (request.getAlgoritm().equals("act")){
-//             getDataForActualAlgo(data,request,currency);
-//             return data;
-//        }
         //возможно есть инфа на завтра
         LocalDate tomorrow = request.getDate().plusDays(1);
 
         log.info("Выполнение запроса {} к ЦБ ",request);
-        getDataFromCBRF(data, tomorrow, missDay, currency);
+        try {
+            getDataFromCBRF(data, tomorrow, missDay, currency);
+        } catch (Exception e) {
+            log.info("Не удалось получить данные из ЦБ");
+            log.debug(e.toString());
+        }
         Collections.reverse(data);
         return data;
     }
-    @SneakyThrows
-    public void getDataForActualAlgo(List<Case> data,Request request, Currency currency){
+
+    public void getDataForActualAlgo(List<Case> data,Request request, Currency currency) {
         List<List<Case>> doubleData = new ArrayList<>();
         while ( doubleData.size() < 2) {
             List<Case> tempList = new ArrayList<>();
@@ -52,7 +53,12 @@ public class CBRFExchange implements Parser {
             int historyTimeFrame = DateHelper.getCountDays(request);
             if (historyTimeFrame == 7) tempDay = tempDay.plusDays(2);
             if (historyTimeFrame == 30) tempDay = tempDay.plusDays(8);
-            getDataFromCBRF(tempList, tempDay.plusDays(historyTimeFrame), historyTimeFrame,currency);
+            try {
+                getDataFromCBRF(tempList, tempDay.plusDays(historyTimeFrame), historyTimeFrame,currency);
+            } catch (Exception e) {
+                log.info("Не удалось получить данные из ЦБ для актуального алгоритма");
+                log.debug(e.toString());
+            }
             doubleData.add(tempList);
         }
         data.addAll(doubleData.get(0));
@@ -112,8 +118,6 @@ public class CBRFExchange implements Parser {
             caseList.add(0, newCase);
             break;
         }
-//        caseList.forEach(System.out::println);
-//        System.out.println("-------------------------------");
     }
 
     private URLConnection getUrlConnection(LocalDate localDate) throws IOException {
@@ -124,7 +128,6 @@ public class CBRFExchange implements Parser {
 
         String urlString = String.format("http://www.cbr-xml-daily.ru/archive/%d/%s/%s/daily.xml",
                 localDate.getYear(), month, day);
-//        System.out.println(urlString);
         URL url = new URL(urlString);
         log.info("Подключение к {}", urlString);
         return url.openConnection();

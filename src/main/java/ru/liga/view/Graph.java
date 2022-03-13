@@ -3,7 +3,10 @@ package ru.liga.view;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
@@ -11,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 @Slf4j
 public class Graph {
     private List<List<Case>> allData = new ArrayList<>();
@@ -22,7 +24,7 @@ public class Graph {
         requests.add(request);
     }
 
-    public void draw() {
+    public void draw() throws Exception {
         List<Double> x = NumpyUtils.linspace(0, allData.get(0).size(), allData.get(0).size());
         StringBuilder stringBuilder = new StringBuilder();
         Plot plt = Plot.create();
@@ -38,8 +40,10 @@ public class Graph {
             plt.title(stringBuilder.toString());
             plt.savefig("graph.png").dpi(200);
             plt.executeSilently();
+            log.info("graph.png создан");
         } catch (IOException | PythonExecutionException e) {
-            e.printStackTrace();
+            log.info("График не создан");
+            throw new Exception("График не создан");
         }
     }
 }

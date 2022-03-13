@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.RequestManyCurrency;
 
@@ -24,8 +25,8 @@ public final class Bot extends TelegramLongPollingBot {
         }
     }
 
-    @SneakyThrows
-    private void handleMessage(Message message) {
+
+    private void handleMessage(Message message) throws TelegramApiException {
         // We check if the update has a message and the message has text
         if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> entity =
@@ -42,9 +43,17 @@ public final class Bot extends TelegramLongPollingBot {
                     execute(SendMessage.builder().text(requestHelper.executeRequest())
                             .chatId(message.getChatId().toString())
                             .build());}
-                else {execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
-                        .chatId(message.getChatId().toString())
-                        .build());}
+                else {
+                    try {
+                        execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
+                            .chatId(message.getChatId().toString())
+                            .build());
+                    } catch (Exception e) {
+                        execute(SendMessage.builder().text(e.getMessage())
+                                .chatId(message.getChatId().toString())
+                                .build());
+                    }
+                }
             }
         }
     }

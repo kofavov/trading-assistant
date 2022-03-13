@@ -21,7 +21,7 @@ public class RequestHelper {
         this.requestManyCurrency = requestManyCurrency;
     }
 
-    public String executeRequest() throws Exception {
+    public String executeRequest() {
         StringBuilder stringBuilder = new StringBuilder();
         switch (requestManyCurrency.getTypeRequest()) {
             case "/help":
@@ -29,17 +29,26 @@ public class RequestHelper {
                 break;
             case "/currency":
                 stringBuilder.append(Currency.getCurrencyMapToString());
-                break;}
+                break;
+        }
         for (String s : requestManyCurrency.getISO_Char_Codes()) {
             Request request = new Request(requestManyCurrency, s);
             switch (requestManyCurrency.getTypeRequest()) {
                 case "/history":
-                    stringBuilder.append("history for ").append(s).append("\n")
-                            .append(getHistoryString(request));
+                    try {
+                        stringBuilder.append("history for ").append(s).append("\n")
+                                .append(getHistoryString(request));
+                    }catch (Exception e){
+                        stringBuilder.append("Не удалось получить историю по запросу ").append(request).append("\n");
+                    }
                     break;
                 case "/rate":
-                    String predictData = getPrediction(request);
-                    stringBuilder.append("predict for ").append(s).append("\n").append(predictData);
+                    try {
+                        String predictData = getPrediction(request);
+                        stringBuilder.append("predict for ").append(s).append("\n").append(predictData);
+                    } catch (Exception e) {
+                        stringBuilder.append("Не удалось получить данные по запросу ").append(request).append("\n");
+                    }
                     break;
             }
         }
@@ -48,7 +57,7 @@ public class RequestHelper {
     }
 
     @SneakyThrows
-    private String getPrediction(Request request) {
+    private String getPrediction(Request request) throws Exception {
         List<Case> predictionData = getPredictionData(request);
         StringBuilder stringBuilder = new StringBuilder();
         predictionData.forEach(s -> stringBuilder.append(s).append("\n"));
@@ -58,36 +67,36 @@ public class RequestHelper {
     private List<Case> getPredictionData(Request request) throws Exception {
         List<Case> data = DataHelper.getData(request);
         Algo algo = Algo.getAlgo(data, request);
-        return algo.getPrediction();
+        return Objects.requireNonNull(algo).getPrediction();
     }
 
     public String helpText() {
         return "trading-assistant\n" +
-                "Пример запроса: rate USD week\n" +
-                "Если хотите увидеть список возможных валют,введите currency\n" +
+                "Пример запроса: /rate USD -period week\n" +
+                "Если хотите увидеть список возможных валют,введите /currency\n" +
                 "Если историю history и ISO валюты\n" +
-                "Пример запроса: history USD\n" +
-                "Доступные тайм фреймы tomorrow, week\n" +
-                "Для выхода введите exit";
+                "Пример запроса: /history USD\n" +
+                "Доступные тайм фреймы для прогноза tomorrow, week, month\n" +
+                "Можно узнать прогноз на дату\n" +
+                "Пример запроса: /rate USD -date 22.02.2022\n "+
+                "Для отображения графика добавить -output graph\n"+
+                "Можно получить данные по нескольким валюта\n" +
+                "Пример запроса: /rate USD,EUR,TRY -period week";
     }
 
     /**
      * метод выводит исторические данные в консоль
      */
-    private static List<Case> getHistory(Request request) {
-        List<Case> data = null;
-        try {
-            data = DataHelper.getData(request);
-            System.out.println(data);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    private static List<Case> getHistory(Request request) throws Exception {
+        List<Case> data = DataHelper.getData(request);
+        System.out.println(data);
         return Objects.requireNonNull(data).subList(0, Math.min(data.size(), 30));
     }
-    private static String getHistoryString(Request request){
+
+    private static String getHistoryString(Request request) throws Exception {
         List<Case> data = getHistory(request);
         StringBuilder stringBuilder = new StringBuilder();
-        data.forEach(c->stringBuilder.append(c.toString()).append("\n"));
+        data.forEach(c -> stringBuilder.append(c.toString()).append("\n"));
         return stringBuilder.toString();
     }
 
@@ -113,8 +122,7 @@ public class RequestHelper {
         return currency && period;
     }
 
-    @SneakyThrows
-    public InputFile executeGraphRequest() {
+    public InputFile executeGraphRequest() throws Exception {
         Graph graph = new Graph();
         for (String s : requestManyCurrency.getISO_Char_Codes()) {
             Request request = new Request(requestManyCurrency, s);

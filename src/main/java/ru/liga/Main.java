@@ -30,7 +30,6 @@ public class Main {
             botsApi.registerBot(new Bot());
         } catch (TelegramApiException e) {
             log.info(e.toString());
-            e.printStackTrace();
         }
     }
 }
