@@ -1,5 +1,6 @@
 package ru.liga.algoritms;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.liga.helpers.DateHelper;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
@@ -8,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+@Slf4j
 public class Actual extends Algo{
     /**
      * @param data    List с полученными данными из какого-либо источника
@@ -20,6 +21,7 @@ public class Actual extends Algo{
 
     @Override
     public List<Case> getPrediction() {
+        log.info("Используется актуальный алгоритм");
         getNewData();
         return newData;
     }

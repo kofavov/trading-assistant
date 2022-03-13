@@ -1,12 +1,13 @@
 package ru.liga.algoritms;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+@Slf4j
 public class LineRegressionFromInternet extends Algo{
 
 
@@ -20,6 +21,7 @@ public class LineRegressionFromInternet extends Algo{
 
     @Override
     public List<Case> getPrediction() {
+        log.info("Используется алгоритм линейной регрессии (из задания)");
         List<Case> oldCases = new ArrayList<>(newData.subList(0,7));
         while (newData.get(0).getDate().isBefore(stopDay)) {
             double newValue = process(oldCases);

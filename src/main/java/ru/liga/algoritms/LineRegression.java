@@ -1,12 +1,13 @@
 package ru.liga.algoritms;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
 import java.util.Collections;
 import java.util.List;
-
+@Slf4j
 public class LineRegression extends ru.liga.algoritms.Algo {
     public LineRegression(List<Case> data, Request request) {
         super(data, request);
@@ -14,6 +15,7 @@ public class LineRegression extends ru.liga.algoritms.Algo {
 
     @Override
     public List<Case> getPrediction() {
+        log.info("Используется алгоритм линейной регрессии (SimpleRegression)");
         //добавляем новые значения пока не достигнем целевого дня
         while (newData.get(0).getDate().isBefore(stopDay)) {
             double newValue = process();

@@ -56,7 +56,7 @@ public class RequestHelper {
         else return stringBuilder.toString();
     }
 
-    @SneakyThrows
+
     private String getPrediction(Request request) throws Exception {
         List<Case> predictionData = getPredictionData(request);
         StringBuilder stringBuilder = new StringBuilder();
@@ -72,16 +72,17 @@ public class RequestHelper {
 
     public String helpText() {
         return "trading-assistant\n" +
-                "Пример запроса: /rate USD -period week\n" +
+                "Пример запроса: /rate USD -period week -alg lr\n" +
                 "Если хотите увидеть список возможных валют,введите /currency\n" +
                 "Если историю history и ISO валюты\n" +
                 "Пример запроса: /history USD\n" +
                 "Доступные тайм фреймы для прогноза tomorrow, week, month\n" +
+                "Доступные алгоритмы: avg, lr, lri, act, moon\n"+
                 "Можно узнать прогноз на дату\n" +
                 "Пример запроса: /rate USD -date 22.02.2022\n "+
                 "Для отображения графика добавить -output graph\n"+
                 "Можно получить данные по нескольким валюта\n" +
-                "Пример запроса: /rate USD,EUR,TRY -period week";
+                "Пример запроса: /rate USD,EUR,TRY -period week -alg lr";
     }
 
     /**

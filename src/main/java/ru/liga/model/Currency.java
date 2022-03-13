@@ -34,10 +34,11 @@ public class Currency {
 
     static {
         try {
+            log.info("Получение данных о доступных валютах");
             fillMap();
         } catch (Exception e) {
-            System.out.println("Данные из ЦБ недоступны Будут использоваться локальные");
-            System.out.println(e.getMessage());
+            log.info("Данные из ЦБ недоступны Будут использоваться локальные");
+            log.info(e.getMessage());
             CURRENCY_MAP.put("USD", new Currency(CurrencyEnum.USD));
             CURRENCY_MAP.put("EUR", new Currency(CurrencyEnum.EUR));
             CURRENCY_MAP.put("TRY", new Currency(CurrencyEnum.TRY));
