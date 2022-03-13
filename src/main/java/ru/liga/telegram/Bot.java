@@ -49,7 +49,7 @@ public final class Bot extends TelegramLongPollingBot {
                             .chatId(message.getChatId().toString())
                             .build());
                     } catch (Exception e) {
-                        execute(SendMessage.builder().text(e.getMessage())
+                        execute(SendMessage.builder().text("Не правильный запрос")
                                 .chatId(message.getChatId().toString())
                                 .build());
                     }

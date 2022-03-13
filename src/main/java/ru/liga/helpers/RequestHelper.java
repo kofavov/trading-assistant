@@ -1,6 +1,7 @@
 package ru.liga.helpers;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import ru.liga.algoritms.Algo;
 import ru.liga.model.Case;
@@ -13,7 +14,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
+@Slf4j
 public class RequestHelper {
     private final RequestManyCurrency requestManyCurrency;
 
@@ -90,7 +91,7 @@ public class RequestHelper {
      */
     private static List<Case> getHistory(Request request) throws Exception {
         List<Case> data = DataHelper.getData(request);
-        System.out.println(data);
+        log.debug(data.toString());
         return Objects.requireNonNull(data).subList(0, Math.min(data.size(), 30));
     }
 
