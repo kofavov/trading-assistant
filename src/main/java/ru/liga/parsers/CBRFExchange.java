@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 public class CBRFExchange implements Parser {
@@ -131,5 +132,18 @@ public class CBRFExchange implements Parser {
         URL url = new URL(urlString);
         log.info("Подключение к {}", urlString);
         return url.openConnection();
+    }
+
+    public Optional<Case> getDataForDay(LocalDate date, Currency currency) {
+       List<Case> data = new ArrayList<>();
+        try {
+            log.info("Получение данных из ЦБ");
+            //если выходной берем первый будний день до выходного
+            getDataFromCBRF(data,date,5,currency);
+        } catch (Exception e) {
+            log.info("Данные из ЦБ не удалось получить");
+        }
+        Collections.reverse(data);
+        return data.stream().findFirst();
     }
 }

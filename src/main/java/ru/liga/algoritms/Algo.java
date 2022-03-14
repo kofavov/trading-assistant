@@ -1,7 +1,6 @@
 package ru.liga.algoritms;
 
 import ru.liga.helpers.DateHelper;
-import ru.liga.helpers.RequestHelper;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
@@ -15,6 +14,7 @@ public abstract class Algo {
     protected LocalDate lastDayInList;
     protected int countDaysForPredict;
     protected LocalDate stopDay;
+
     /**
      * @param data    List с полученными данными из какого-либо источника
      * @param request запрос пользователя
@@ -26,17 +26,20 @@ public abstract class Algo {
         lastDayInList = newData.get(0).getDate();
         //вычисление последнего дня для прогноза
         countDaysForPredict = DateHelper.getCountDays(request);
-        if (!request.getDate().equals(LocalDate.now())){
+        if (!request.getDate().equals(LocalDate.now())) {
             stopDay = request.getDate();
-        }else {
-        stopDay = lastDayInList.plusDays(countDaysForPredict);
-        //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза на 7 дней
-        if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
-        if (countDaysForPredict == 30) stopDay = stopDay.plusDays(8);
-        //если есть завтрашние данные -1 прогнозируемый день
-        if (lastDayInList.isAfter(LocalDate.now())){
-           stopDay = stopDay.minusDays(1);
-        }
+        } else {
+            if (request.getAlgoritm().equals("moon")){
+                lastDayInList = request.getDate().plusDays(1);
+            }
+            stopDay = lastDayInList.plusDays(countDaysForPredict);
+            //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза на 7 дней
+            if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
+            if (countDaysForPredict == 30) stopDay = stopDay.plusDays(8);
+            //если есть завтрашние данные -1 прогнозируемый день
+            if (lastDayInList.isAfter(LocalDate.now())) {
+                stopDay = stopDay.minusDays(1);
+            }
         }
     }
 
@@ -50,11 +53,14 @@ public abstract class Algo {
         if (request.getAlgoritm().equals("lr")) {
             return new LineRegression(data, request);
         }
-        if(request.getAlgoritm().equals("lri")){
-            return new LineRegressionFromInternet(data,request);
+        if (request.getAlgoritm().equals("lri")) {
+            return new LineRegressionFromInternet(data, request);
         }
-        if (request.getAlgoritm().equals("act")){
+        if (request.getAlgoritm().equals("act")) {
             return new Actual(data, request);
+        }
+        if (request.getAlgoritm().equals("moon")) {
+            return new MoonAlgo(data, request);
         }
         return null;
     }
@@ -67,6 +73,5 @@ public abstract class Algo {
         newCase.setCurrency(currentCase.getCurrency());
         newCase.setValue(newValue);
         newData.add(0, newCase);
-        newData.remove(newData.size() - 1);
     }
 }

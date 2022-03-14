@@ -10,8 +10,7 @@ import ru.liga.parsers.CSVParser;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 public class DataHelper {
@@ -27,8 +26,11 @@ public class DataHelper {
      */
 
     public static List<Case> getData(Request request) throws Exception {
-        if (request.getAlgoritm().equals("act")){
+        if (request.getAlgoritm().equals("act")) {
             return getDataForActAlgo(request);
+        }
+        if (request.getAlgoritm().equals("moon")) {
+            return getDataForMoonAlgo(request);
         }
         CSVParser csvParser = new CSVParser();
         List<Case> data = csvParser.getNewData(request);//csv файл из папки tempRate (ЦБ + данные из задания)
@@ -43,6 +45,39 @@ public class DataHelper {
         }
         data.get(0).setCurrency(request.getISO_Char_Code());
         return data;
+    }
+
+    private static List<Case> getDataForMoonAlgo(Request request) {
+        LinkedHashSet<LocalDate> fullMoonCalendar = CSVParser.getFullMoonSet();
+        Stack<LocalDate> fullMoonStack = new Stack<>();
+        for (LocalDate date : fullMoonCalendar) {
+            if (date.isAfter(request.getDate())) break;
+            fullMoonStack.push(date);
+        }
+        LinkedList<Case> casesFullMoon = new LinkedList<>();
+        CSVParser csvParser = new CSVParser();
+        List<Case> data = csvParser.getNewData(request);//csv файл из папки tempRate (ЦБ + данные из задания)
+        if (data.isEmpty() || data.size() < 30) {
+            data.addAll(csvParser.getOldData(request));//csv файл из общей папки с данными из задания
+        }
+        for (int i = 0; i < 3; i++) {
+            Optional<Case> fullMoonCase = data.stream().filter(e -> e.getDate().isBefore(fullMoonStack.peek().plusDays(1))).findFirst();
+            if (fullMoonCase.isPresent()) {
+                casesFullMoon.add(fullMoonCase.get());
+                fullMoonStack.pop();
+            }
+        }
+
+        if (casesFullMoon.size() < 3) {
+            for (int i = 0; i <= 3 - casesFullMoon.size(); i++) {
+                CBRFExchange cbrfExchange = new CBRFExchange();
+                Optional<Case> o = cbrfExchange.getDataForDay(fullMoonStack.pop(),
+                        Currency.getCurrencyMap().get(request.getISO_Char_Code()));
+                o.ifPresent(casesFullMoon::add);
+            }
+        }
+
+        return casesFullMoon;
     }
 
     private static List<Case> getCBRFData(Request request, CSVParser csvParser, List<Case> data) {
@@ -70,7 +105,7 @@ public class DataHelper {
         return data;
     }
 
-    private static List<Case> getDataForActAlgo(Request request){
+    private static List<Case> getDataForActAlgo(Request request) {
         CSVParser csvParser = new CSVParser();
         CBRFExchange cbrfExchange = new CBRFExchange();
         List<Case> data = new ArrayList<>(csvParser.getActAlgoData(request));

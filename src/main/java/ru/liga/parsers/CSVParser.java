@@ -1,7 +1,6 @@
 package ru.liga.parsers;
 
 import au.com.bytecode.opencsv.CSVReader;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.liga.helpers.DateHelper;
 import ru.liga.model.Case;
@@ -11,14 +10,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+
 @Slf4j
 public class CSVParser implements ru.liga.parsers.Parser {
+    private static final LinkedHashSet<LocalDate> FULL_MOON_SET = new LinkedHashSet<>();
+    static {
+        getFullMoon();
+    }
+
     @SuppressWarnings("resource")
     public List<Case> getOldData(Request request) {
         List<Case> data = new ArrayList<>();
@@ -123,5 +127,30 @@ public class CSVParser implements ru.liga.parsers.Parser {
             log.info("Файла {} не существует",file);
         }
         return data;
+    }
+
+    public static LinkedHashSet<LocalDate> getFullMoonSet() {
+        return FULL_MOON_SET;
+    }
+
+    private static void getFullMoon (){
+        File file = new File("moon-phase-calendar-landscape.csv");
+        if (file.exists()) {
+            try {
+                log.info("Получение данных из {}",file.getPath());
+                FileReader fileReader = new FileReader(file);
+                CSVReader reader = new CSVReader(fileReader, ',', '"', 1);
+                List<String[]> strings = reader.readAll();
+                for (String[] row : strings) {
+                    if (row[0].equals("Full Moon")){
+                    FULL_MOON_SET.add(LocalDate.parse(row[3],DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                    }
+                }
+                reader.close();
+            } catch (IOException e) {
+                log.info("Не удалось прочитать файл {}",file);
+                log.info(e.toString());
+            }
+        }
     }
 }
