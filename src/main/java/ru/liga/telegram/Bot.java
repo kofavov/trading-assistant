@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.RequestManyCurrency;
 
@@ -40,10 +41,16 @@ public final class Bot extends TelegramLongPollingBot {
                         .chatId(message.getChatId().toString())
                         .build());
                 if (!requestManyCurrency.getOutput().equals("graph")){
-                    execute(SendMessage.builder().text(requestHelper.executeRequest())
-                            .chatId(message.getChatId().toString())
-                            .build());}
-                else {
+                    try {
+                        execute(SendMessage.builder().text(requestHelper.executeRequest())
+                                .chatId(message.getChatId().toString())
+                                .build());
+                    } catch (TelegramApiRequestException e) {
+                        execute(SendMessage.builder().text(e.getMessage())
+                                .chatId(message.getChatId().toString())
+                                .build());
+                    }
+                }else {
                     try {
                         execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
                             .chatId(message.getChatId().toString())

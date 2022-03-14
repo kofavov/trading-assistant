@@ -92,6 +92,7 @@ public class CSVParser implements ru.liga.parsers.Parser {
     public List<Case> getActAlgoData(Request request) {
         List<Case> data = new ArrayList<>();
         File file = new File(request.getISO_Char_Code() + ".csv");
+        log.info("Получение данных из {}",file.getPath());
         if (file.exists()) {
             try {
                 FileReader fileReader = new FileReader(request.getISO_Char_Code() + ".csv");
@@ -118,6 +119,8 @@ public class CSVParser implements ru.liga.parsers.Parser {
                 log.info("Не удалось прочитать файл {} для актуального алгоритма",file);
                 log.info(e.toString());
             }
+        }else {
+            log.info("Файла {} не существует",file);
         }
         return data;
     }
