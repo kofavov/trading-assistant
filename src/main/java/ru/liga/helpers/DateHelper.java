@@ -6,6 +6,7 @@ import ru.liga.model.Request;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class DateHelper {
     /**
@@ -34,7 +35,7 @@ public class DateHelper {
         }
         else if (!request.getDate().equals(LocalDate.now()))
         {
-            return request.getDate().compareTo(LocalDate.now());
+            return (int) ChronoUnit.DAYS.between(LocalDate.now(),request.getDate());
         }
         return 0;
     }
@@ -50,5 +51,14 @@ public class DateHelper {
     public static boolean newCheckDayOfWeek(LocalDate localDate){
         return localDate.getDayOfWeek().equals(DayOfWeek.MONDAY)
                 ||localDate.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+    }
+
+    public static int getCountDays(String period) {
+        switch (period){
+            case "tomorrow":return 2;
+            case "week":return 8;
+            case "month":return 31;
+        }
+        return 1;
     }
 }

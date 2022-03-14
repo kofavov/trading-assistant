@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.liga.helpers.RequestHelper;
 import ru.liga.model.RequestManyCurrency;
 
-import java.io.File;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Slf4j
@@ -35,31 +35,34 @@ public final class Bot extends TelegramLongPollingBot {
             if (entity.isPresent()) {
                 String command = message.getText();
                 log.info(command);
-                RequestManyCurrency requestManyCurrency = new RequestManyCurrency(command);
-                RequestHelper requestHelper = new RequestHelper(requestManyCurrency);
-                execute(SendMessage.builder().text(requestManyCurrency + " выполняется")
-                        .chatId(message.getChatId().toString())
-                        .build());
-                if (!requestManyCurrency.getOutput().equals("graph")){
-                    try {
+                RequestManyCurrency requestManyCurrency = null;
+                try {
+                    requestManyCurrency = new RequestManyCurrency(command);
+                    RequestHelper requestHelper = new RequestHelper(requestManyCurrency);
+                    execute(SendMessage.builder().text(requestManyCurrency + " выполняется")
+                            .chatId(message.getChatId().toString())
+                            .build());
+                    if (!requestManyCurrency.getOutput().equals("graph")) {
                         execute(SendMessage.builder().text(requestHelper.executeRequest())
                                 .chatId(message.getChatId().toString())
                                 .build());
-                    } catch (TelegramApiRequestException e) {
-                        execute(SendMessage.builder().text(e.getMessage())
+                    } else {
+                        execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
                                 .chatId(message.getChatId().toString())
                                 .build());
                     }
-                }else {
-                    try {
-                        execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
+                } catch (DateTimeParseException e) {
+                    execute(SendMessage.builder().text("Неправильно введена дата")
                             .chatId(message.getChatId().toString())
                             .build());
-                    } catch (Exception e) {
-                        execute(SendMessage.builder().text("Не правильный запрос")
-                                .chatId(message.getChatId().toString())
-                                .build());
-                    }
+                } catch (TelegramApiRequestException e) {
+                    execute(SendMessage.builder().text(e.getMessage())
+                            .chatId(message.getChatId().toString())
+                            .build());
+                } catch (Exception e) {
+                    execute(SendMessage.builder().text("Неправильный запрос")
+                            .chatId(message.getChatId().toString())
+                            .build());
                 }
             }
         }

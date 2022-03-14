@@ -26,12 +26,18 @@ public abstract class Algo {
         lastDayInList = newData.get(0).getDate();
         //вычисление последнего дня для прогноза
         countDaysForPredict = DateHelper.getCountDays(request);
+        if (request.getAlgoritm().equals("moon")) {
+            lastDayInList = request.getDate().plusDays(1);
+        }
         if (!request.getDate().equals(LocalDate.now())) {
             stopDay = request.getDate();
-        } else {
-            if (request.getAlgoritm().equals("moon")){
-                lastDayInList = request.getDate().plusDays(1);
+            countDaysForPredict = DateHelper.getCountDays(request.getPeriod());
+            if (countDaysForPredict != 1) {
+                stopDay = stopDay.plusDays(countDaysForPredict);
+                if (countDaysForPredict == 8) countDaysForPredict--;
+                if (countDaysForPredict == 31) countDaysForPredict-=8;
             }
+        } else {
             stopDay = lastDayInList.plusDays(countDaysForPredict);
             //сб и вс пропускаются поэтому надо добавить еще 2 дня для прогноза на 7 дней
             if (countDaysForPredict == 7) stopDay = stopDay.plusDays(2);
@@ -40,6 +46,7 @@ public abstract class Algo {
             if (lastDayInList.isAfter(LocalDate.now())) {
                 stopDay = stopDay.minusDays(1);
             }
+            countDaysForPredict = DateHelper.getCountDays(request.getPeriod());
         }
     }
 

@@ -17,11 +17,13 @@ public class LineRegression extends ru.liga.algoritms.Algo {
     public List<Case> getPrediction() {
         log.info("Используется алгоритм линейной регрессии (SimpleRegression)");
         //добавляем новые значения пока не достигнем целевого дня
+        int i = 0;
         while (newData.get(0).getDate().isBefore(stopDay)) {
             double newValue = process();
             addNewCase(newData, newValue);
+            i++;
         }
-        newData = newData.subList(0, countDaysForPredict);
+        newData = newData.subList(0, Math.min(i, countDaysForPredict));
         Collections.reverse(newData);
         return newData;
     }

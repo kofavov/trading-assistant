@@ -23,12 +23,14 @@ public class LineRegressionFromInternet extends Algo{
     public List<Case> getPrediction() {
         log.info("Используется алгоритм линейной регрессии (из задания)");
         List<Case> oldCases = new ArrayList<>(newData.subList(0,7));
+        int i = 0;
         while (newData.get(0).getDate().isBefore(stopDay)) {
             double newValue = process(oldCases);
             addNewCase(newData, newValue);
             addNewCase(oldCases,newValue);
+            i++;
         }
-        newData = newData.subList(0, countDaysForPredict);
+        newData = newData.subList(0, Math.min(i, countDaysForPredict));
         Collections.reverse(newData);
         return newData;
     }

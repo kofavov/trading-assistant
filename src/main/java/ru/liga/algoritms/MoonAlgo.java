@@ -24,11 +24,14 @@ public class MoonAlgo extends Algo{
     public List<Case> getPrediction() {
         log.info("Используется мистический алгоритм");
         addFirstElement();
+        int i = 0;
         while (newData.get(0).getDate().isBefore(stopDay)) {
             double random = (((Math.random()*20) - 10)/100)+1;
             addNewCase(newData, newData.get(0).getValue()*random);
+            i++;
         }
-        newData = newData.subList(0,countDaysForPredict);
+
+        newData = newData.subList(0,Math.min(i, countDaysForPredict));
         Collections.reverse(newData);
         return newData;
     }
@@ -38,7 +41,7 @@ public class MoonAlgo extends Algo{
         Case c = new Case();
         c.setCurrency(newData.get(0).getCurrency());
         c.setValue(firstResult);
-        c.setDate(request.getDate());
+        c.setDate(LocalDate.now());
         c.setNominal(newData.get(0).getNominal());
         newData.add(0,c);
     }

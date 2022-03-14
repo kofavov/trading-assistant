@@ -27,9 +27,13 @@ public class Actual extends Algo{
     }
 
     private void getNewData() {
+        if (newData.size()==1){
+            return ;
+        }
         List<Case> threeYearsAgoData = newData.subList(0,newData.size()/2);
         List<Case> twoYearsAgoData = newData.subList(newData.size()/2,newData.size());
         newData = new ArrayList<>();
+
         for (int i = 0, j = 0; newData.size() < threeYearsAgoData.size(); i++,j++) {
             Case c = new Case();
             c.setCurrency(request.getISO_Char_Code());
@@ -43,5 +47,6 @@ public class Actual extends Algo{
             c.setNominal(threeYearsAgoData.get(i).getNominal());
             newData.add(c);
         }
+
     }
 }
