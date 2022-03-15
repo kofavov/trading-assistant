@@ -3,10 +3,7 @@ package ru.liga.view;
 import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import ru.liga.model.Case;
 import ru.liga.model.Request;
 
@@ -32,7 +29,7 @@ public class Graph {
             List<Case> data = allData.get(i);
             Request request = requests.get(i);
             String color = Color.getColorById(i%Color.values().length);
-            List<Double> C = data.stream().map(c -> c.getValue()).collect(Collectors.toList());
+            List<Double> C = data.stream().map(c -> c.getValue()).collect(Collectors.toList());//
             plt.plot().add(x, C).color(color).linewidth(2.5).linestyle("-");
             stringBuilder.append(request.getISO_Char_Code()).append("-").append(color).append(" ");
         }

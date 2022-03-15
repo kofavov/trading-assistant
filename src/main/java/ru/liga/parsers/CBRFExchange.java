@@ -54,8 +54,10 @@ public class CBRFExchange implements Parser {
             int historyTimeFrame = DateHelper.getCountDays(request);
             if (historyTimeFrame == 7) tempDay = tempDay.plusDays(2);
             if (historyTimeFrame == 30) tempDay = tempDay.plusDays(8);
+
             try {
                 getDataFromCBRF(tempList, tempDay.plusDays(historyTimeFrame), historyTimeFrame,currency);
+                Collections.reverse(tempList);
             } catch (Exception e) {
                 log.info("Не удалось получить данные из ЦБ для актуального алгоритма");
                 log.debug(e.toString());

@@ -23,7 +23,7 @@ public class Main {
      * eсли нужно выводить все дни подряд, то там же закомментировать 19-20 строчки
      */
 
-    @SneakyThrows
+
     public static void main(String[] args) {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);

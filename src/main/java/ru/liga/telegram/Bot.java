@@ -19,10 +19,13 @@ import java.util.Optional;
 @Slf4j
 public final class Bot extends TelegramLongPollingBot {
     @Override
-    @SneakyThrows
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
-            handleMessage(update.getMessage());
+            try {
+                handleMessage(update.getMessage());
+            } catch (TelegramApiException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -32,7 +35,7 @@ public final class Bot extends TelegramLongPollingBot {
         if (message.hasText() && message.hasEntities()) {
             Optional<MessageEntity> entity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
-            if (entity.isPresent()) {
+            if (entity.isPresent()) {//
                 String command = message.getText();
                 log.info(command);
                 RequestManyCurrency requestManyCurrency = null;
