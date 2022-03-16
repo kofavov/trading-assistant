@@ -8,6 +8,4 @@ public class DateHelper {
         return date.getDayOfWeek().equals(DayOfWeek.MONDAY)
                 || date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
     }
-
-
 }

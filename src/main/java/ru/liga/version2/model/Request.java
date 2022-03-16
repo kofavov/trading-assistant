@@ -13,8 +13,7 @@ import java.util.List;
 @Data
 public class Request {
     private String typeRequest = "";
-    private List<String> ISO_Char_Codes = List.of("");
-    //USD, EUR, TRY и т.д.
+    private List<String> ISO_Char_Codes = List.of("");//USD, EUR, TRY и т.д.
     private LocalDate stopDay = LocalDate.now();
     private String period = "";//tomorrow, week
     private Algoritm algoritm = null;

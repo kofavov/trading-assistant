@@ -22,13 +22,14 @@ import java.util.TreeMap;
 @Slf4j
 public class CBRFExchange implements Parser {
     private final HashMap<String, TreeMap<LocalDate, Case>> data = new HashMap<>();
+    private final int countDownloadDays = 10;
 
     @Override
     public HashMap<String, TreeMap<LocalDate, Case>> getData() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         log.info("Получение данных из ЦБ");
         //количество загружаемых дней нельзя больше 119
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < countDownloadDays; i++) {
             LocalDate tempDay = tomorrow.minusDays(i);
             if (DateHelper.checkWeekend(tempDay)) {
                 continue;

@@ -44,9 +44,9 @@ public final class Bot extends TelegramLongPollingBot {
     }
 
     private void executeCommand(Message message, String command) throws TelegramApiException {
-        Request request = null;
+
         try {
-             request = new Request(command);
+            Request request = new Request(command);
             RequestHelper requestHelper = new RequestHelper(request);
             execute(SendMessage.builder().text(command + " выполняется")
                     .chatId(message.getChatId().toString())
@@ -56,9 +56,9 @@ public final class Bot extends TelegramLongPollingBot {
                         .chatId(message.getChatId().toString())
                         .build());
             } else {
-                        execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
-                                .chatId(message.getChatId().toString())
-                                .build());
+                execute(SendPhoto.builder().photo(requestHelper.executeGraphRequest())
+                        .chatId(message.getChatId().toString())
+                        .build());
             }
         } catch (DateTimeParseException e) {
             execute(SendMessage.builder().text("Неправильно введена дата")
@@ -68,7 +68,7 @@ public final class Bot extends TelegramLongPollingBot {
             execute(SendMessage.builder().text(e.getMessage())
                     .chatId(message.getChatId().toString())
                     .build());
-        } catch (Exception exception) {
+        } catch (Exception e) {
             execute(SendMessage.builder().text("Ошибка")
                     .chatId(message.getChatId().toString())
                     .build());

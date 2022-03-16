@@ -17,11 +17,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class CSVParser implements Parser {
+    private static final String DIRECTORY_DATA = "oldData";
+
     public HashMap<String, TreeMap<LocalDate, Case>> getData() {
         HashMap<String, TreeMap<LocalDate, Case>> data = new HashMap<>();
         List<Path> paths;
         try {
-            paths = Files.walk(Path.of("oldData")).collect(Collectors.toList());
+            paths = Files.walk(Path.of(DIRECTORY_DATA)).collect(Collectors.toList());
             for (Path p : paths) {
                 if (p.getFileName().toString().matches("...\\.csv")) {
                     TreeMap<LocalDate, Case> oldData = getOldData(p);
@@ -79,7 +81,7 @@ public class CSVParser implements Parser {
     }
 
     public void save(String iso, TreeMap<LocalDate, Case> saveData) {
-        File file = new File("oldData\\" + iso + ".csv");
+        File file = new File(DIRECTORY_DATA + "\\" + iso + ".csv");
         try {
             FileWriter fileWriter = new FileWriter(file, false);
             log.info("Сохранение файла {}", file.getPath());

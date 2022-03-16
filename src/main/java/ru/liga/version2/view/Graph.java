@@ -4,6 +4,7 @@ import com.github.sh0nk.matplotlib4j.NumpyUtils;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 import lombok.extern.slf4j.Slf4j;
+import ru.liga.version2.exception.RequestException;
 import ru.liga.version2.model.Case;
 
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class Graph {
+    private static final String OUTPUT_FILE_NAME = "graph.png";
     private final HashMap<String, TreeMap<LocalDate, Case>> allData;
 
     public Graph(HashMap<String, TreeMap<LocalDate, Case>> allData) {
@@ -34,12 +36,12 @@ public class Graph {
         }
         try {
             plt.title(stringBuilder.toString());
-            plt.savefig("graph.png").dpi(200);
+            plt.savefig(OUTPUT_FILE_NAME).dpi(200);
             plt.executeSilently();
-            log.info("graph.png создан");
+            log.info("{} создан", OUTPUT_FILE_NAME);
         } catch (IOException | PythonExecutionException e) {
             log.info("График не создан");
-            throw new Exception("График не создан");
+            throw new RequestException("График не создан");
         }
     }
 }
