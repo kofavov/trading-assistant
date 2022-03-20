@@ -36,25 +36,31 @@ public class Request {
                     this.output = simpleCommands[++i];
                     break;
                 case "-date":
-                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                    String s = simpleCommands[++i];
-                    if (s.equals("tomorrow")) {
-                        this.period = s;
-                        date = LocalDate.now().plusDays(1);
-                    } else {
-                        this.date = LocalDate.parse(s, dateTimeFormatter);
-                        stopDay = date;
-                    }
+                    calculateStartDate(simpleCommands[++i]);
                     break;
             }
         }
         calculateStopDate();
     }
+
+    private void calculateStartDate(String s) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        if (s.equals("tomorrow")) {
+            this.period = s;
+            date = LocalDate.now().plusDays(1);
+        } else {
+            this.date = LocalDate.parse(s, dateTimeFormatter);
+            stopDay = date;
+        }
+    }
+
     private void calculateStopDate(){
         switch (period){
             case "tomorrow": stopDay = stopDay.plusDays(1);break;
             case "week": stopDay = stopDay.plusWeeks(1);break;
             case "month": stopDay = stopDay.plusMonths(1);break;
+            case "" : break;
+            default:throw new RequestException("Нет такого периода");
         }
     }
 

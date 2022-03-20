@@ -11,10 +11,10 @@ import java.util.*;
 
 @Slf4j
 public abstract class SimpleAlgo implements Algoritm {
-    protected final HashMap<String, TreeMap<LocalDate, Case>> predictionData = new HashMap<>();
-    protected final HashMap<String, TreeMap<LocalDate, Case>> data = new HashMap<>(DataTable.getDATA());
+    protected final Map<String, Map<LocalDate, Case>> predictionData = new HashMap<>();
+    protected final Map<String, Map<LocalDate, Case>> data = new HashMap<>(DataTable.getDATA());
 
-    public HashMap<String, TreeMap<LocalDate, Case>> getPrediction(Request request) {
+    public Map<String, Map<LocalDate, Case>> getPrediction(Request request) {
         log.info("Используется алгоритм {}", request.getAlgoritm().getClass().getSimpleName());
         for (String iso : request.getISO_Char_Codes()) {
             predictionData.put(iso, process(data.get(iso), request));
@@ -22,16 +22,21 @@ public abstract class SimpleAlgo implements Algoritm {
         return predictionData;
     }
 
-    protected TreeMap<LocalDate, Case> process(TreeMap<LocalDate, Case> data, Request request) {
+    protected Map<LocalDate, Case> process(Map<LocalDate, Case> data, Request request) {
         LocalDate tempDay = data.keySet().stream().max(LocalDate::compareTo).orElseThrow();
         List<Case> newAndOldCases = new ArrayList<>(data.values());
-        TreeMap<LocalDate, Case> newCases = new TreeMap<>();
+        Map<LocalDate, Case> newCases = new TreeMap<>();
         Collections.reverse(newAndOldCases);
         LocalDate stopDay = request.getStopDay();
         //возможно есть данные на завтра
         if (tempDay.isAfter(LocalDate.now())) {
             newCases.put(tempDay, data.get(tempDay));
         }
+        putNewCases(tempDay, newAndOldCases, newCases, stopDay);
+        return newCases;
+    }
+
+    private void putNewCases(LocalDate tempDay, List<Case> newAndOldCases, Map<LocalDate, Case> newCases, LocalDate stopDay) {
         while (tempDay.isBefore(stopDay)) {
             tempDay = tempDay.plusDays(1);
             if (DateHelper.checkWeekend(tempDay)) {
@@ -43,7 +48,6 @@ public abstract class SimpleAlgo implements Algoritm {
             newAndOldCases.add(0, newCase);
             newCases.put(newCase.getDate(), newCase);
         }
-        return newCases;
     }
 
     protected abstract double getValue(List<Case> data);

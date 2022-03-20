@@ -1,29 +1,59 @@
-//package ru.liga;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//import ru.liga.helpers.RequestHelper;
-//import ru.liga.model.RequestManyCurrency;
-//
-//import java.util.Arrays;
-//
-//public class OutputTest {
-//    //работает только если подключение нормальное
-//    //нужен общий сканер в RequestHelper
-//    @Test
-//    public void checkUSDHistoryRequest() {
-//        RequestManyCurrency request = new RequestManyCurrency("/history USD");
-//        RequestHelper requestHelper = new RequestHelper(request);
-//        boolean checkOneString = false;
-//        String[] outputStrings = requestHelper.executeRequest().split("\n");
-//        boolean firstString = outputStrings[0].equals("history for USD");
-////        System.out.println(Arrays.toString(outputStrings));
-//        for (int i = 1; i < outputStrings.length-2; i++) {
-//            boolean date = outputStrings[i].matches("[а-я]{2} \\d{2}\\.\\d{2}\\.\\d{4} - .+");
-//            boolean price = outputStrings[i].matches(".+ \\d{2,3},\\d{2}");
-//            checkOneString = date && price;
-//            if(!checkOneString)break;
-//        }
-//        Assert.assertTrue(checkOneString&&firstString);
-//    }
-//}
+package ru.liga;
+
+import org.junit.Assert;
+import org.junit.Test;
+import ru.liga.version2.helper.RequestHelper;
+import ru.liga.version2.model.Request;
+
+import java.io.File;
+
+
+public class OutputTest {
+
+    @Test
+    public void checkUSDHistoryRequest() {
+        Request request = new Request("/history USD");
+        RequestHelper requestHelper = new RequestHelper(request);
+
+        String[] outputStrings = requestHelper.executeTextRequest().split("\n");
+        boolean firstString = outputStrings[0].equals("history USD Доллар США");
+
+        boolean checkStrings = checkStringWithValue( outputStrings);
+        Assert.assertTrue(checkStrings && firstString);
+    }
+
+    @Test
+    public void checkUSDRateRequest() {
+        Request request = new Request("/rate USD -period week -alg avg");
+        RequestHelper requestHelper = new RequestHelper(request);
+
+        String[] outputStrings = requestHelper.executeTextRequest().split("\n");
+        boolean firstString = outputStrings[0].equals("Predict for USD");
+
+        boolean checkStrings = checkStringWithValue( outputStrings);
+        Assert.assertTrue(checkStrings && firstString);
+    }
+    @Test
+    public void graphOutputTest() throws Exception {
+        File file = new File("graph.png");
+        boolean delete = file.delete();
+
+        Request request = new Request("/rate USD -period week -alg avg");
+        RequestHelper requestHelper = new RequestHelper(request);
+
+        requestHelper.executeGraphRequest();
+
+        Assert.assertTrue(file.exists() && delete);
+    }
+
+    private boolean checkStringWithValue(String[] outputStrings) {
+        boolean checkOneString = false;
+        for (int i = 1; i < outputStrings.length; i++) {
+            boolean date = outputStrings[i].matches("[а-я]{2} \\d{2}\\.\\d{2}\\.\\d{4} - .+");
+            boolean price = outputStrings[i].matches(".+ \\d{2,3},\\d{2}");
+            checkOneString = date && price;
+            if (!checkOneString) break;
+        }
+        return checkOneString;
+    }
+}

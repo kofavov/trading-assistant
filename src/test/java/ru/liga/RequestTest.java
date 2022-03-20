@@ -1,87 +1,63 @@
-//package ru.liga;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//import ru.liga.helpers.RequestHelper;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.ByteArrayOutputStream;
-//import java.io.IOException;
-//import java.io.PrintStream;
-//import java.util.NoSuchElementException;
-////чтобы запустить все тесты сразу, нужен в RequestHelper отдельный сканер на метод
-//public class RequestTest {
-//
-//    @Test
-//    public void checkBadRequest() {
-////        ByteArrayInputStream in = new ByteArrayInputStream("Bad request\r\n".getBytes());
-////        System.setIn(in);
-////        ByteArrayOutputStream output = new ByteArrayOutputStream();
-////        System.setOut(new PrintStream(output));
-////        try {
-////            RequestHelper.getRequestForPrediction();
-////        } catch (NoSuchElementException ignored) {
-////        }
-////        boolean checkOutput = isCheckOutput(output);
-////        Assert.assertTrue(checkOutput);
-//    }
-////
-////    @Test
-////    public void checkBadRequest2() {
-////        ByteArrayInputStream in = new ByteArrayInputStream("rate USD noSuchPeriod\r\n".getBytes());
-////        System.setIn(in);
-////        ByteArrayOutputStream output = new ByteArrayOutputStream();
-////        System.setOut(new PrintStream(output));
-////
-////        try {
-////            RequestHelper.getRequestForPrediction();
-////        } catch (NoSuchElementException ignored) {
-////        }
-////        boolean checkOutput = isCheckOutput(output);
-////        Assert.assertTrue(checkOutput);
-////
-////    }
-////
-////    @Test
-////    public void checkBadRequest3() {
-////        ByteArrayInputStream in = new ByteArrayInputStream("rate noSuchCurrency week\r\n".getBytes());
-////        System.setIn(in);
-////        ByteArrayOutputStream output = new ByteArrayOutputStream();
-////        System.setOut(new PrintStream(output));
-////        try {
-////            RequestHelper.getRequestForPrediction();
-////        } catch (NoSuchElementException ignored) {
-////        }
-////        boolean checkOutput = isCheckOutput(output);
-////
-////        Assert.assertTrue(checkOutput);
-////
-////    }
-//
-//    @Test
-//    public void checkNormalRequest() throws IOException {
-////        ByteArrayInputStream in = new ByteArrayInputStream("rate USD week\r\n".getBytes());
-////        System.setIn(in);
-////        ByteArrayOutputStream output = new ByteArrayOutputStream();
-////        System.setOut(new PrintStream(output));
-////        try {
-////            RequestHelper.getRequestForPrediction();
-////        } catch (NoSuchElementException ignored) {
-////        }
-////        boolean checkOutput = isCheckOutput(output);
-////        in.close();
-////        System.setIn(System.in);
-////        Assert.assertFalse(checkOutput);
-//
-//    }
-//
-//    private boolean isCheckOutput(ByteArrayOutputStream output) {
-//        String[] splitStrings = output.toString().split("\r(\n?)");
-//        boolean checkOutput = false;
-//        for (String s : splitStrings) {
-//            checkOutput = s.contains("Введите верный запрос");
-//            if (checkOutput) break;
-//        }
-//        return checkOutput;
-//    }
-//}
+package ru.liga;
+
+import org.junit.Assert;
+import org.junit.Test;
+import ru.liga.version2.algoritm.Average;
+import ru.liga.version2.exception.RequestException;
+import ru.liga.version2.helper.RequestHelper;
+import ru.liga.version2.model.Request;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.LocalDate;
+
+
+public class RequestTest {
+    @Test
+    public void checkBadRequest() {
+        Request request = new Request("/Bad request");
+        RequestHelper requestHelper = new RequestHelper(request);
+
+        Assert.assertEquals(requestHelper.executeTextRequest(),"неверный тип запроса");
+    }
+
+    @Test
+    public void checkBadRequestWithoutTruePeriod() {
+        String command = "/rate USD -period noSuchPeriod";
+        String expectedMessage = "Нет такого периода";
+        Assert.assertThrows(expectedMessage,RequestException.class,()->new Request(command));
+    }
+
+    @Test
+    public void checkBadWithoutTrueAlgoritm() {
+        String command = "/rate USD -period week -alg noSucAlg";
+        String expectedMessage = "алгоритм не найден";
+        Assert.assertThrows(expectedMessage,RequestException.class,()->new Request(command));
+    }
+
+    @Test
+    public void checkNormalRequest() throws IOException {
+        String command = "/rate USD -period week -alg avg";
+        Request request = new Request(command);
+        boolean normalRequest = request.getTypeRequest().equals("/rate")
+                && request.getISO_Char_Codes().get(0).equals("USD")
+                && request.getAlgoritm().getClass().equals(Average.class)
+                && request.getPeriod().equals("week")
+                && request.getDate().isEqual(LocalDate.now())
+                && request.getStopDay().isEqual(LocalDate.now().plusWeeks(1));
+        Assert.assertTrue(normalRequest);
+    }
+    @Test
+    public void checkNormalTomorrowRequest() throws IOException {
+        String command = "/rate USD -date tomorrow -alg avg";
+        Request request = new Request(command);
+        boolean normalRequest = request.getTypeRequest().equals("/rate")
+                && request.getISO_Char_Codes().get(0).equals("USD")
+                && request.getAlgoritm().getClass().equals(Average.class)
+                && request.getPeriod().equals("tomorrow")
+                && request.getDate().isEqual(LocalDate.now().plusDays(1))
+                && request.getStopDay().isEqual(LocalDate.now().plusDays(1));
+        Assert.assertTrue(normalRequest);
+    }
+}

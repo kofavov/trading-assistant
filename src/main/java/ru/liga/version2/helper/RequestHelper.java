@@ -37,27 +37,29 @@ public class RequestHelper {
         HashMap<String, TreeMap<LocalDate, Case>> data = new HashMap<>();
 
         switch (request.getTypeRequest()) {
-            case "/history": {
-                for (String iso : request.getISO_Char_Codes()) {
-                    TreeMap<LocalDate, Case> cur = new TreeMap<>(DataTable.getDATA().get(iso)
-                            .subMap(LocalDate.now().minusMonths(3), true,
-                                    LocalDate.now(), true));
-
-                    data.put(iso, cur);
-                }
+            case "/history":
+                getHistoryMap(data);
                 break;
-            }
-
-            case "/rate": {
+            case "/rate":
                 data.putAll(getPrediction(request));
                 break;
-            }
-            default:throw new RequestException("Неверный запрос");
+            default:
+                throw new RequestException("Неверный запрос");
         }
 
         Graph graph = new Graph(data);
         graph.draw();
         return new InputFile(new File("graph.png"));
+    }
+
+    private void getHistoryMap(HashMap<String, TreeMap<LocalDate, Case>> data) {
+        for (String iso : request.getISO_Char_Codes()) {
+            TreeMap<LocalDate, Case> cur = new TreeMap<>(DataTable.getDATA().get(iso)
+                    .subMap(LocalDate.now().minusMonths(3), true,
+                            LocalDate.now(), true));
+
+            data.put(iso, cur);
+        }
     }
 
 
@@ -76,9 +78,9 @@ public class RequestHelper {
     }
 
     private HashMap<String, TreeMap<LocalDate, Case>> getPrediction(Request request) {
-        HashMap<String, TreeMap<LocalDate, Case>> fullPrediction = request.getAlgoritm().getPrediction(request);
+        Map<String, Map<LocalDate, Case>> fullPrediction = request.getAlgoritm().getPrediction(request);
         HashMap<String, TreeMap<LocalDate, Case>> cutPrediction = new HashMap<>();
-        for (Map.Entry<String, TreeMap<LocalDate, Case>> cur : fullPrediction.entrySet()) {
+        for (Map.Entry<String, Map<LocalDate, Case>> cur : fullPrediction.entrySet()) {
             TreeMap<LocalDate, Case> cutCases = new TreeMap<>();
             for (Map.Entry<LocalDate, Case> c : cur.getValue().entrySet()) {
                 LocalDate startDay = request.getDate().minusDays(1);

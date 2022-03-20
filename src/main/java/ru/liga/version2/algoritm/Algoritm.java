@@ -5,8 +5,9 @@ import ru.liga.version2.model.Request;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeMap;
 
 public interface Algoritm {
-    HashMap<String, TreeMap<LocalDate, Case>> getPrediction(Request request);
+    Map<String, Map<LocalDate, Case>> getPrediction(Request request);
 }

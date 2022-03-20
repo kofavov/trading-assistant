@@ -48,13 +48,20 @@ public class CBRFExchange implements Parser {
         return data;
     }
 
-    public Case getDataForDay(LocalDate date, String iso) throws IOException, ParserConfigurationException {
+    public Case getDataForDay(LocalDate date, String iso)  {
         log.info("Получение данных из ЦБ");
-        getDataFromXml(date);
+
+        try {
+            getDataFromXml(date);
+        } catch (IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
         try {
             Thread.sleep(210);
         } catch (InterruptedException ignored) {
         }
+
         return data.get(iso).get(date);
     }
 

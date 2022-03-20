@@ -44,7 +44,6 @@ public final class Bot extends TelegramLongPollingBot {
     }
 
     private void executeCommand(Message message, String command) throws TelegramApiException {
-
         try {
             Request request = new Request(command);
             RequestHelper requestHelper = new RequestHelper(request);
